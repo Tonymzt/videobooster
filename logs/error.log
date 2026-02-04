@@ -1,0 +1,52 @@
+{"level":"error","message":"Error actualizando job test_job_1770097344518: Could not find the 'duration' column of 'video_jobs' in the schema cache","service":"videobooster-api","timestamp":"2026-02-02 22:42:26"}
+{"level":"error","message":"Error creando job en DB: Could not find the 'user_id' column of 'video_jobs' in the schema cache","service":"videobooster-api","timestamp":"2026-02-02 23:25:55"}
+{"level":"error","message":"Error en generateVideo: Could not find the 'user_id' column of 'video_jobs' in the schema cache","service":"videobooster-api","timestamp":"2026-02-02 23:25:55"}
+{"level":"error","message":"Error en POST /api/generate-video: Could not find the 'user_id' column of 'video_jobs' in the schema cache","service":"videobooster-api","timestamp":"2026-02-02 23:25:55"}
+{"level":"error","service":"videobooster-api","timestamp":"2026-02-02 23:25:55"}
+{"level":"error","message":"❌ Error generando fondo: Request failed with status code 400","service":"videobooster-api","timestamp":"2026-02-03 13:54:09"}
+{"level":"error","message":"❌ Error generando avatar: Request failed with status code 404","service":"videobooster-api","timestamp":"2026-02-03 13:54:09"}
+{"level":"error","message":"❌ Error generando avatar con HeyGen:","service":"videobooster-api","timestamp":"2026-02-03 14:07:12"}
+{"level":"error","message":"   Mensaje: Request failed with status code 404","service":"videobooster-api","timestamp":"2026-02-03 14:07:12"}
+{"level":"error","message":"   Status: 404","service":"videobooster-api","timestamp":"2026-02-03 14:07:12"}
+{"level":"error","message":"   Status Text: NOT FOUND","service":"videobooster-api","timestamp":"2026-02-03 14:07:12"}
+{"level":"error","message":"   Response Data: {\n  \"data\": null,\n  \"error\": {\n    \"code\": \"internal_error\",\n    \"message\": \"avatar look not found, look_id: default, space_id: e0802d59a00b43118cc7efe5ecc77a4f\"\n  }\n}","service":"videobooster-api","timestamp":"2026-02-03 14:07:12"}
+{"level":"error","message":"   Request URL: https://api.heygen.com/v2/video/generate","service":"videobooster-api","timestamp":"2026-02-03 14:07:12"}
+{"level":"error","message":"   Error Code: ERR_BAD_REQUEST","service":"videobooster-api","timestamp":"2026-02-03 14:07:12"}
+{"level":"error","message":"❌ Error generando avatar con HeyGen:","service":"videobooster-api","timestamp":"2026-02-03 14:07:57"}
+{"level":"error","message":"   Mensaje: Request failed with status code 404","service":"videobooster-api","timestamp":"2026-02-03 14:07:57"}
+{"level":"error","message":"   Status: 404","service":"videobooster-api","timestamp":"2026-02-03 14:07:57"}
+{"level":"error","message":"   Status Text: NOT FOUND","service":"videobooster-api","timestamp":"2026-02-03 14:07:57"}
+{"level":"error","message":"   Response Data: {\n  \"data\": null,\n  \"error\": {\n    \"code\": \"internal_error\",\n    \"message\": \"avatar look not found, look_id: Wayne_20240711, space_id: e0802d59a00b43118cc7efe5ecc77a4f\"\n  }\n}","service":"videobooster-api","timestamp":"2026-02-03 14:07:57"}
+{"level":"error","message":"   Request URL: https://api.heygen.com/v2/video/generate","service":"videobooster-api","timestamp":"2026-02-03 14:07:57"}
+{"level":"error","message":"   Error Code: ERR_BAD_REQUEST","service":"videobooster-api","timestamp":"2026-02-03 14:07:57"}
+{"level":"error","message":"❌ Error generando avatar con HeyGen:","service":"videobooster-api","timestamp":"2026-02-03 14:18:59"}
+{"level":"error","message":"   Mensaje: Request failed with status code 404","service":"videobooster-api","timestamp":"2026-02-03 14:18:59"}
+{"level":"error","message":"   Status: 404","service":"videobooster-api","timestamp":"2026-02-03 14:18:59"}
+{"level":"error","message":"   Status Text: NOT FOUND","service":"videobooster-api","timestamp":"2026-02-03 14:18:59"}
+{"level":"error","message":"   Response Data: {\n  \"data\": null,\n  \"error\": {\n    \"code\": \"internal_error\",\n    \"message\": \"avatar look not found, look_id: 4a086d8d4e3a44af89d6b307cb47b03a, space_id: e0802d59a00b43118cc7efe5ecc77a4f\"\n  }\n}","service":"videobooster-api","timestamp":"2026-02-03 14:18:59"}
+{"level":"error","message":"   Request URL: https://api.heygen.com/v2/video/generate","service":"videobooster-api","timestamp":"2026-02-03 14:18:59"}
+{"level":"error","message":"   Error Code: ERR_BAD_REQUEST","service":"videobooster-api","timestamp":"2026-02-03 14:18:59"}
+{"level":"error","message":"❌ Error generando avatar con HeyGen:","service":"videobooster-api","timestamp":"2026-02-03 14:20:14"}
+{"level":"error","message":"   Mensaje: Request failed with status code 404","service":"videobooster-api","timestamp":"2026-02-03 14:20:14"}
+{"level":"error","message":"   Status: 404","service":"videobooster-api","timestamp":"2026-02-03 14:20:14"}
+{"level":"error","message":"   Status Text: NOT FOUND","service":"videobooster-api","timestamp":"2026-02-03 14:20:14"}
+{"level":"error","message":"   Response Data: \"<!DOCTYPE HTML PUBLIC \\\"-//W3C//DTD HTML 3.2 Final//EN\\\">\\n<title>404 Not Found</title>\\n<h1>Not Found</h1>\\n<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>\\n\"","service":"videobooster-api","timestamp":"2026-02-03 14:20:14"}
+{"level":"error","message":"   Request URL: https://api.heygen.com/v2/video_status.get?video_id=da6ae97425d84f7fa1aeea56dc6dc819","service":"videobooster-api","timestamp":"2026-02-03 14:20:14"}
+{"level":"error","message":"   Error Code: ERR_BAD_REQUEST","service":"videobooster-api","timestamp":"2026-02-03 14:20:14"}
+{"level":"error","message":"   ❌ Generación falló en HeyGen","service":"videobooster-api","timestamp":"2026-02-03 14:20:52"}
+{"level":"error","message":"   Datos: {\"callback_id\":null,\"caption_url\":null,\"created_at\":1770153646,\"duration\":null,\"error\":{\"code\":\"TTS_VOICE_UNAVAILABLE_ERR\",\"detail\":\"Voice validation failed for 1 voice(s)\",\"message\":\"Voice validation failed for 1 voice(s)\"},\"gif_url\":null,\"id\":\"80729a230742413185e11358eaba563d\",\"status\":\"failed\",\"thumbnail_url\":null,\"video_url\":null,\"video_url_caption\":null}","service":"videobooster-api","timestamp":"2026-02-03 14:20:52"}
+{"level":"error","message":"❌ Error generando avatar con HeyGen:","service":"videobooster-api","timestamp":"2026-02-03 14:20:52"}
+{"level":"error","message":"   Mensaje: Generación falló en HeyGen","service":"videobooster-api","timestamp":"2026-02-03 14:20:52"}
+{"level":"error","message":"❌ Error generando avatar con HeyGen:","service":"videobooster-api","timestamp":"2026-02-03 14:21:51"}
+{"level":"error","message":"   Mensaje: Request failed with status code 400","service":"videobooster-api","timestamp":"2026-02-03 14:21:51"}
+{"level":"error","message":"   Status: 400","service":"videobooster-api","timestamp":"2026-02-03 14:21:51"}
+{"level":"error","message":"   Status Text: BAD REQUEST","service":"videobooster-api","timestamp":"2026-02-03 14:21:51"}
+{"level":"error","message":"   Response Data: {\n  \"data\": null,\n  \"error\": {\n    \"code\": \"invalid_parameter\",\n    \"message\": \"video_inputs.0.voice.text.voice_id is invalid: Field required\"\n  }\n}","service":"videobooster-api","timestamp":"2026-02-03 14:21:51"}
+{"level":"error","message":"   Request URL: https://api.heygen.com/v2/video/generate","service":"videobooster-api","timestamp":"2026-02-03 14:21:51"}
+{"level":"error","message":"   Error Code: ERR_BAD_REQUEST","service":"videobooster-api","timestamp":"2026-02-03 14:21:51"}
+{"level":"error","message":"❌ Error en HeyGen Audio-Driven: HeyGen failed: {\"code\":\"RESOLUTION_NOT_ALLOWED\",\"detail\":\"Please subscribe to higher plan to generate higher resolution videos\",\"message\":\"Please subscribe to higher plan to generate higher resolution videos\"}","service":"videobooster-api","timestamp":"2026-02-03 14:33:58"}
+{"level":"error","message":"❌ Error en HeyGen Audio-Driven: HeyGen failed: {\"code\":\"RESOLUTION_NOT_ALLOWED\",\"detail\":\"Please subscribe to higher plan to generate higher resolution videos\",\"message\":\"Please subscribe to higher plan to generate higher resolution videos\"}","service":"videobooster-api","timestamp":"2026-02-03 14:34:20"}
+{"level":"error","message":"❌ Error en Leonardo Motion:","service":"videobooster-api","timestamp":"2026-02-03 14:57:50"}
+{"level":"error","message":"   Mensaje: Request failed with status code 400","service":"videobooster-api","timestamp":"2026-02-03 14:57:50"}
+{"level":"error","message":"   Status: 400","service":"videobooster-api","timestamp":"2026-02-03 14:57:50"}
+{"level":"error","message":"   Response: {\n  \"error\": \"Unexpected variable imageUrl\",\n  \"path\": \"$\",\n  \"code\": \"bad-request\"\n}","service":"videobooster-api","timestamp":"2026-02-03 14:57:50"}

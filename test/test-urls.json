@@ -1,0 +1,12 @@
+{
+    "mercadolibre": {
+        "url": "https://www.mercadolibre.com.mx/apple-ipad-air-11-wi-fi-128-gb-blanco/p/MLM37551542",
+        "category": "electrónica",
+        "description": "iPad Air 11 - Producto de prueba para scraper"
+    },
+    "amazon": {
+        "url": "https://www.amazon.com.mx/dp/B0DKXXWXN4",
+        "category": "hogar",
+        "description": "Freidora de Aire Oster - Producto de prueba para scraper"
+    }
+}
