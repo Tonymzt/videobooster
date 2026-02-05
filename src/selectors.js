@@ -3,6 +3,15 @@
  * Define los selectores para extraer datos de MercadoLibre y Amazon
  */
 
+/**
+ * ⚠️ DEPRECATED - ESTE MÓDULO YA NO SE USA
+ * 
+ * Selectores para Amazon y MercadoLibre (obsoletos)
+ * Ver scraper.js para más información sobre la deprecación
+ */
+
+console.warn('⚠️ selectors.js está deprecated - Scraping eliminado del sistema');
+
 const SELECTORS = {
     mercadolibre: {
         title: [

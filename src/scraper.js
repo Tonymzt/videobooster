@@ -17,6 +17,21 @@
  * - Algunos productos pueden tener selectores diferentes (se usan múltiples fallbacks)
  */
 
+/**
+ * ⚠️ DEPRECATED - ESTE MÓDULO YA NO SE USA
+ * 
+ * Fecha de deprecación: Enero 2026
+ * Razón: Pivote arquitectónico - Eliminación de scraping de marketplaces
+ * Nuevo flujo: Upload directo de imágenes por el usuario
+ * 
+ * Este archivo se mantiene temporalmente para referencia histórica.
+ * Será eliminado en la próxima versión mayor (v2.0).
+ * 
+ * NO USAR EN CÓDIGO NUEVO.
+ */
+
+console.warn('⚠️ scraper.js está deprecated - No usar en nuevas implementaciones');
+
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const { SELECTORS, trySelectors, trySelectorsMultiple } = require('./selectors');
