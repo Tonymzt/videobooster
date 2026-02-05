@@ -4580,3 +4580,99 @@
 {"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:40:26"}
 {"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:40:26"}
 {"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:40:26"}
+{"level":"info","message":"Video queue initialized","service":"videobooster-api","timestamp":"2026-02-04 19:53:31"}
+{"level":"info","message":"Video queue initialized","service":"videobooster-api","timestamp":"2026-02-04 19:53:31"}
+{"level":"info","message":"Video queue initialized","service":"videobooster-api","timestamp":"2026-02-04 19:53:31"}
+{"level":"info","message":"Video worker initialized (concurrency: 2)","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"\n════════════════════════════════════════════════════════════","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"🚀 VideoBooster API Server","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"📡 Puerto: 3000","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"🌍 Entorno: development","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"📊 Endpoints:","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   POST   /api/generate-video","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/video-status/:jobId","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"Video worker initialized (concurrency: 2)","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"\n════════════════════════════════════════════════════════════","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"🚀 VideoBooster API Server","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"📡 Puerto: 3000","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"🌍 Entorno: development","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"📊 Endpoints:","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   POST   /api/generate-video","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/video-status/:jobId","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"Video queue initialized","service":"videobooster-api","timestamp":"2026-02-04 19:53:31"}
+{"level":"info","message":"Video worker initialized (concurrency: 2)","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"\n════════════════════════════════════════════════════════════","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"🚀 VideoBooster API Server","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"📡 Puerto: 3000","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"🌍 Entorno: development","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"📊 Endpoints:","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   POST   /api/generate-video","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/video-status/:jobId","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"Video worker initialized (concurrency: 2)","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"\n════════════════════════════════════════════════════════════","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"🚀 VideoBooster API Server","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"📡 Puerto: 3000","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"🌍 Entorno: development","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"📊 Endpoints:","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   POST   /api/generate-video","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/video-status/:jobId","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:53:33"}
+{"level":"info","message":"Video queue initialized","service":"videobooster-api","timestamp":"2026-02-04 19:55:08"}
+{"level":"info","message":"Video queue initialized","service":"videobooster-api","timestamp":"2026-02-04 19:55:08"}
+{"level":"info","message":"Video queue initialized","service":"videobooster-api","timestamp":"2026-02-04 19:55:08"}
+{"level":"info","message":"Video worker initialized (concurrency: 2)","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"\n════════════════════════════════════════════════════════════","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"🚀 VideoBooster API Server","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"📡 Puerto: 3000","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"🌍 Entorno: development","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"📊 Endpoints:","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   POST   /api/generate-video","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/video-status/:jobId","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"Video worker initialized (concurrency: 2)","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"\n════════════════════════════════════════════════════════════","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"🚀 VideoBooster API Server","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"📡 Puerto: 3000","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"🌍 Entorno: development","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"📊 Endpoints:","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   POST   /api/generate-video","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/video-status/:jobId","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"Video worker initialized (concurrency: 2)","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"\n════════════════════════════════════════════════════════════","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"🚀 VideoBooster API Server","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"📡 Puerto: 3000","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"🌍 Entorno: development","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"📊 Endpoints:","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   POST   /api/generate-video","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/video-status/:jobId","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"Video queue initialized","service":"videobooster-api","timestamp":"2026-02-04 19:55:08"}
+{"level":"info","message":"Video worker initialized (concurrency: 2)","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"\n════════════════════════════════════════════════════════════","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"🚀 VideoBooster API Server","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"📡 Puerto: 3000","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"🌍 Entorno: development","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"📊 Endpoints:","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   POST   /api/generate-video","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/video-status/:jobId","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/stats","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"   GET    /api/health","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
+{"level":"info","message":"════════════════════════════════════════════════════════════\n","service":"videobooster-api","timestamp":"2026-02-04 19:55:09"}
