@@ -1,21 +1,20 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { headers } from 'next/headers';
 
-const ENCRYPTION_KEY = process.env.FISCAL_ENCRYPTION_KEY;
-
-if (!ENCRYPTION_KEY) {
-    throw new Error('FISCAL_ENCRYPTION_KEY not configured');
+function getEncryptionKey() {
+    const key = process.env.FISCAL_ENCRYPTION_KEY;
+    if (!key) {
+        throw new Error('FISCAL_ENCRYPTION_KEY not configured in runtime');
+    }
+    return key;
 }
 
-// Nota: Usamos SERVICE_ROLE_KEY para permitir bypass controlado de RLS 
-// y ejecutar funciones de encriptación rpc
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// Rate limiting simple
+// Rate limiting
 const rateLimitMap = new Map();
 
 function checkRateLimit(userId) {
@@ -23,7 +22,7 @@ function checkRateLimit(userId) {
     const userRequests = rateLimitMap.get(userId) || [];
     const recentRequests = userRequests.filter(time => now - time < 60000);
 
-    if (recentRequests.length >= 20) { // Incrementado ligeramente para carga inicial
+    if (recentRequests.length >= 20) {
         return false;
     }
 
@@ -34,6 +33,7 @@ function checkRateLimit(userId) {
 
 export async function GET(request) {
     try {
+        const ENCRYPTION_KEY = getEncryptionKey();
         const authHeader = request.headers.get('authorization');
 
         if (!authHeader) {
@@ -54,55 +54,71 @@ export async function GET(request) {
 
         const { data: profile, error } = await supabase
             .from('profiles')
-            .select('rfc_encrypted, razon_social_encrypted, direccion_fiscal_encrypted, regimen_fiscal, uso_cfdi')
+            .select('full_name, account_type, rfc_encrypted, razon_social_encrypted, direccion_fiscal_encrypted, regimen_fiscal, uso_cfdi, fiscal_data_completed')
             .eq('id', user.id)
             .single();
 
         if (error) throw error;
 
-        // Desencriptar datos
         const decryptedData = {
+            full_name: profile.full_name,
+            account_type: profile.account_type,
             rfc: null,
             razon_social: null,
             direccion_fiscal: null,
             regimen_fiscal: profile.regimen_fiscal,
-            uso_cfdi: profile.uso_cfdi || 'G03'
+            uso_cfdi: profile.uso_cfdi || 'G03',
+            fiscal_data_completed: profile.fiscal_data_completed
         };
 
+        // Desencriptar RFC (array posicional)
         if (profile.rfc_encrypted) {
-            const { data } = await supabase.rpc('decrypt_sensitive_data', {
-                encrypted: profile.rfc_encrypted,
-                key: ENCRYPTION_KEY
+            const { data, error } = await supabase.rpc('decrypt_sensitive_data', {
+                args: [profile.rfc_encrypted, ENCRYPTION_KEY]
             });
-            decryptedData.rfc = data;
+
+            if (!error && data) {
+                decryptedData.rfc = data;
+            }
         }
 
+        // Desencriptar Razón Social
         if (profile.razon_social_encrypted) {
-            const { data } = await supabase.rpc('decrypt_sensitive_data', {
-                encrypted: profile.razon_social_encrypted,
-                key: ENCRYPTION_KEY
+            const { data, error } = await supabase.rpc('decrypt_sensitive_data', {
+                args: [profile.razon_social_encrypted, ENCRYPTION_KEY]
             });
-            decryptedData.razon_social = data;
+
+            if (!error && data) {
+                decryptedData.razon_social = data;
+            }
         }
 
+        // Desencriptar Dirección
         if (profile.direccion_fiscal_encrypted) {
-            const { data } = await supabase.rpc('decrypt_sensitive_data', {
-                encrypted: profile.direccion_fiscal_encrypted,
-                key: ENCRYPTION_KEY
+            const { data, error } = await supabase.rpc('decrypt_sensitive_data', {
+                args: [profile.direccion_fiscal_encrypted, ENCRYPTION_KEY]
             });
-            decryptedData.direccion_fiscal = data ? JSON.parse(data) : null;
+
+            if (!error && data) {
+                try {
+                    decryptedData.direccion_fiscal = JSON.parse(data);
+                } catch (e) {
+                    console.error('Error parsing direccion_fiscal:', e);
+                }
+            }
         }
 
         return NextResponse.json({ success: true, data: decryptedData });
 
     } catch (error) {
-        console.error('Fiscal API error:', error);
+        console.error('Fiscal GET error:', error);
         return NextResponse.json({ error: 'Internal error' }, { status: 500 });
     }
 }
 
 export async function PUT(request) {
     try {
+        const ENCRYPTION_KEY = getEncryptionKey();
         const authHeader = request.headers.get('authorization');
 
         if (!authHeader) {
@@ -129,49 +145,78 @@ export async function PUT(request) {
         }
 
         const updates = {
+            full_name: body.full_name,
             regimen_fiscal: body.regimen_fiscal,
             uso_cfdi: body.uso_cfdi || 'G03',
             updated_at: new Date().toISOString()
         };
 
-        // Encriptar RFC
+        // Encriptar RFC (array posicional)
         if (body.rfc) {
-            const { data } = await supabase.rpc('encrypt_sensitive_data', {
-                data: body.rfc.toUpperCase(),
-                key: ENCRYPTION_KEY
+            const { data, error } = await supabase.rpc('encrypt_sensitive_data', {
+                args: [body.rfc.toUpperCase(), ENCRYPTION_KEY]
             });
+
+            if (error) {
+                console.error('Error encrypting RFC:', error);
+                return NextResponse.json({ error: 'Cifrado fallido (RFC)' }, { status: 500 });
+            }
+
             updates.rfc_encrypted = data;
         }
 
         // Encriptar Razón Social
         if (body.razon_social) {
-            const { data } = await supabase.rpc('encrypt_sensitive_data', {
-                data: body.razon_social.toUpperCase(),
-                key: ENCRYPTION_KEY
+            const { data, error } = await supabase.rpc('encrypt_sensitive_data', {
+                args: [body.razon_social.toUpperCase(), ENCRYPTION_KEY]
             });
+
+            if (error) {
+                console.error('Error encrypting Razón Social:', error);
+                return NextResponse.json({ error: 'Cifrado fallido (Razón Social)' }, { status: 500 });
+            }
+
             updates.razon_social_encrypted = data;
         }
 
         // Encriptar Dirección
         if (body.direccion_fiscal) {
-            const { data } = await supabase.rpc('encrypt_sensitive_data', {
-                data: JSON.stringify(body.direccion_fiscal),
-                key: ENCRYPTION_KEY
+            const { data, error } = await supabase.rpc('encrypt_sensitive_data', {
+                args: [JSON.stringify(body.direccion_fiscal), ENCRYPTION_KEY]
             });
+
+            if (error) {
+                console.error('Error encrypting Dirección:', error);
+                return NextResponse.json({ error: 'Cifrado fallido (Dirección)' }, { status: 500 });
+            }
+
             updates.direccion_fiscal_encrypted = data;
         }
 
-        const { error } = await supabase
+        // Calcular si datos están completos
+        const isComplete = body.rfc &&
+            body.razon_social &&
+            body.regimen_fiscal &&
+            body.uso_cfdi &&
+            body.direccion_fiscal?.cp;
+
+        updates.fiscal_data_completed = isComplete;
+
+        // Guardar en BD
+        const { error: updateError } = await supabase
             .from('profiles')
             .update(updates)
             .eq('id', user.id);
 
-        if (error) throw error;
+        if (updateError) {
+            console.error('Error updating profile:', updateError);
+            throw updateError;
+        }
 
         return NextResponse.json({ success: true });
 
     } catch (error) {
-        console.error('Update error:', error);
+        console.error('Fiscal PUT error:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
