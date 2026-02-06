@@ -1,10 +1,5 @@
 steps:
-  # Paso 1: Instalar dependencias del Monorepo
-  - name: 'node:20-alpine'
-    entrypoint: npm
-    args: ['ci']
-    
-  # Paso 2: Build Docker image con ARGs (Horneado de variables NEXT_PUBLIC)
+  # Paso 1: Build Docker image con ARGs (Horneado de variables NEXT_PUBLIC)
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
@@ -24,14 +19,14 @@ steps:
       - 'gcr.io/$PROJECT_ID/videobooster-frontend:latest'
       - '.'
     
-  # Paso 3: Push image al Registro
+  # Paso 2: Push image al Registro
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
       - '--all-tags'
       - 'gcr.io/$PROJECT_ID/videobooster-frontend'
     
-  # Paso 4: Deploy a Cloud Run con Inyección de Secretos
+  # Paso 3: Deploy a Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -58,7 +53,6 @@ steps:
       - '--max-instances'
       - '10'
 
-# Optimizaciones del Build
 options:
   machineType: 'E2_HIGHCPU_8'
   logging: CLOUD_LOGGING_ONLY

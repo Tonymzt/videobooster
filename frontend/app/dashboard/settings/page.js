@@ -72,15 +72,15 @@ export default function SettingsPage() {
             if (!session) return;
 
             // 🛡️ CAPA 4: Llamada a API Segura en lugar de Query directo
-            const response = await fetch('/api/settings', {
+            const response = await fetch('/api/settings/fiscal', {
                 headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
             const data = await response.json();
 
             if (!data.success) throw new Error(data.error);
 
-            const profileData = data.profile;
-            setProfile(profileData);
+            const profileData = data.data; // El nuevo API devuelve { success: true, data: {...} }
+            setProfile({ ...profileData, full_name: profileData.full_name || '' });
             setFormData({
                 full_name: profileData.full_name || '',
                 rfc: profileData.rfc || '',
@@ -199,7 +199,7 @@ export default function SettingsPage() {
             }
 
             // 🛡️ CAPA 4: Guardado seguro vía API
-            const response = await fetch('/api/settings', {
+            const response = await fetch('/api/settings/fiscal', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

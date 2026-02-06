@@ -9,7 +9,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY frontend/package*.json ./frontend/
 
-# Instalar dependencias
+# Instalar dependencias usando workspaces
 RUN npm ci --workspace=frontend --include=dev
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -19,17 +19,15 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copiar dependencias instaladas
+# Copiar todas las dependencias instaladas (hoisted in root)
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/frontend/node_modules ./frontend/node_modules
-
-# Copiar código fuente
-COPY frontend ./frontend
+# Copiamos el package.json de la raíz para resolver workspaces
 COPY package*.json ./
+# Copiamos el proyecto frontend
+COPY frontend ./frontend
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # VARIABLES DE BUILD (ARG)
-# Se pasan desde cloudbuild.yaml con --build-arg
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -44,7 +42,7 @@ ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build Next.js con variables REALES
+# Build Next.js
 WORKDIR /app/frontend
 RUN npm run build
 
@@ -63,10 +61,8 @@ ENV HOSTNAME="0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copiar archivos públicos
+# Copiar archivos públicos y estáticos (de la salida standalone)
 COPY --from=builder /app/frontend/public ./public
-
-# Copiar archivos built (standalone)
 COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/static ./frontend/.next/static
 
