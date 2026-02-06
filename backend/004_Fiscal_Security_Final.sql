@@ -4,28 +4,33 @@
 -- 1. Habilitar extensión de encriptación
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+-- Limpiar vistas antiguas que puedan causar conflictos de dependencia
+DROP VIEW IF EXISTS security_audit_summary;
+DROP VIEW IF EXISTS profiles_fiscal_secure;
+DROP VIEW IF EXISTS fiscal_security_audit;
+
 -- 2. Crear función de encriptación
-CREATE OR REPLACE FUNCTION encrypt_sensitive_data(data TEXT, key TEXT)
+CREATE OR REPLACE FUNCTION encrypt_sensitive_data(raw_data TEXT, key_text TEXT)
 RETURNS TEXT AS $$
 BEGIN
   RETURN encode(
-    pgp_sym_encrypt(data, key),
+    pgp_sym_encrypt(raw_data, key_text),
     'base64'
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- 3. Crear función de desencriptación
-CREATE OR REPLACE FUNCTION decrypt_sensitive_data(encrypted TEXT, key TEXT)
+CREATE OR REPLACE FUNCTION decrypt_sensitive_data(encrypted_data TEXT, key_text TEXT)
 RETURNS TEXT AS $$
 BEGIN
-  IF encrypted IS NULL OR encrypted = '' THEN
+  IF encrypted_data IS NULL OR encrypted_data = '' THEN
     RETURN NULL;
   END IF;
   
   RETURN pgp_sym_decrypt(
-    decode(encrypted, 'base64'),
-    key
+    decode(encrypted_data, 'base64'),
+    key_text
   );
 EXCEPTION
   WHEN OTHERS THEN
@@ -60,6 +65,11 @@ CREATE TABLE IF NOT EXISTS fiscal_data_access_log (
   error_message TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Asegurar que las columnas existan (por si la tabla ya existía de versiones anteriores)
+ALTER TABLE fiscal_data_access_log ADD COLUMN IF NOT EXISTS success BOOLEAN DEFAULT true;
+ALTER TABLE fiscal_data_access_log ADD COLUMN IF NOT EXISTS error_message TEXT;
+ALTER TABLE fiscal_data_access_log ALTER COLUMN ip_address TYPE INET USING ip_address::INET;
 
 -- Índices para performance
 CREATE INDEX IF NOT EXISTS idx_fiscal_log_user ON fiscal_data_access_log(user_id, created_at DESC);

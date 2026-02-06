@@ -71,35 +71,38 @@ export async function GET(request) {
             fiscal_data_completed: profile.fiscal_data_completed
         };
 
-        // Desencriptar RFC (array posicional)
+        // Desencriptar RFC
         if (profile.rfc_encrypted) {
-            const { data, error } = await supabase.rpc('decrypt_sensitive_data', {
-                args: [profile.rfc_encrypted, ENCRYPTION_KEY]
+            const { data, error: rpcError } = await supabase.rpc('decrypt_sensitive_data', {
+                encrypted_data: profile.rfc_encrypted,
+                key_text: ENCRYPTION_KEY
             });
 
-            if (!error && data) {
+            if (!rpcError && data) {
                 decryptedData.rfc = data;
             }
         }
 
         // Desencriptar Razón Social
         if (profile.razon_social_encrypted) {
-            const { data, error } = await supabase.rpc('decrypt_sensitive_data', {
-                args: [profile.razon_social_encrypted, ENCRYPTION_KEY]
+            const { data, error: rpcError } = await supabase.rpc('decrypt_sensitive_data', {
+                encrypted_data: profile.razon_social_encrypted,
+                key_text: ENCRYPTION_KEY
             });
 
-            if (!error && data) {
+            if (!rpcError && data) {
                 decryptedData.razon_social = data;
             }
         }
 
         // Desencriptar Dirección
         if (profile.direccion_fiscal_encrypted) {
-            const { data, error } = await supabase.rpc('decrypt_sensitive_data', {
-                args: [profile.direccion_fiscal_encrypted, ENCRYPTION_KEY]
+            const { data, error: rpcError } = await supabase.rpc('decrypt_sensitive_data', {
+                encrypted_data: profile.direccion_fiscal_encrypted,
+                key_text: ENCRYPTION_KEY
             });
 
-            if (!error && data) {
+            if (!rpcError && data) {
                 try {
                     decryptedData.direccion_fiscal = JSON.parse(data);
                 } catch (e) {
@@ -151,15 +154,16 @@ export async function PUT(request) {
             updated_at: new Date().toISOString()
         };
 
-        // Encriptar RFC (array posicional)
+        // Encriptar RFC
         if (body.rfc) {
-            const { data, error } = await supabase.rpc('encrypt_sensitive_data', {
-                args: [body.rfc.toUpperCase(), ENCRYPTION_KEY]
+            const { data, error: rpcError } = await supabase.rpc('encrypt_sensitive_data', {
+                raw_data: body.rfc.toUpperCase(),
+                key_text: ENCRYPTION_KEY
             });
 
-            if (error) {
-                console.error('Error encrypting RFC:', error);
-                return NextResponse.json({ error: 'Cifrado fallido (RFC)' }, { status: 500 });
+            if (rpcError) {
+                console.error('RPC Error (RFC):', rpcError);
+                return NextResponse.json({ error: 'Cifrado fallido (RFC): ' + rpcError.message }, { status: 500 });
             }
 
             updates.rfc_encrypted = data;
@@ -167,13 +171,14 @@ export async function PUT(request) {
 
         // Encriptar Razón Social
         if (body.razon_social) {
-            const { data, error } = await supabase.rpc('encrypt_sensitive_data', {
-                args: [body.razon_social.toUpperCase(), ENCRYPTION_KEY]
+            const { data, error: rpcError } = await supabase.rpc('encrypt_sensitive_data', {
+                raw_data: body.razon_social.toUpperCase(),
+                key_text: ENCRYPTION_KEY
             });
 
-            if (error) {
-                console.error('Error encrypting Razón Social:', error);
-                return NextResponse.json({ error: 'Cifrado fallido (Razón Social)' }, { status: 500 });
+            if (rpcError) {
+                console.error('RPC Error (Razón Social):', rpcError);
+                return NextResponse.json({ error: 'Cifrado fallido (Razón Social): ' + rpcError.message }, { status: 500 });
             }
 
             updates.razon_social_encrypted = data;
@@ -181,13 +186,14 @@ export async function PUT(request) {
 
         // Encriptar Dirección
         if (body.direccion_fiscal) {
-            const { data, error } = await supabase.rpc('encrypt_sensitive_data', {
-                args: [JSON.stringify(body.direccion_fiscal), ENCRYPTION_KEY]
+            const { data, error: rpcError } = await supabase.rpc('encrypt_sensitive_data', {
+                raw_data: JSON.stringify(body.direccion_fiscal),
+                key_text: ENCRYPTION_KEY
             });
 
-            if (error) {
-                console.error('Error encrypting Dirección:', error);
-                return NextResponse.json({ error: 'Cifrado fallido (Dirección)' }, { status: 500 });
+            if (rpcError) {
+                console.error('RPC Error (Dirección):', rpcError);
+                return NextResponse.json({ error: 'Cifrado fallido (Dirección): ' + rpcError.message }, { status: 500 });
             }
 
             updates.direccion_fiscal_encrypted = data;
@@ -200,7 +206,7 @@ export async function PUT(request) {
             body.uso_cfdi &&
             body.direccion_fiscal?.cp;
 
-        updates.fiscal_data_completed = isComplete;
+        updates.fiscal_data_completed = isComplete || false;
 
         // Guardar en BD
         const { error: updateError } = await supabase
