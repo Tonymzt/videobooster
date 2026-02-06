@@ -199,14 +199,16 @@ export async function PUT(request) {
             updates.direccion_fiscal_encrypted = data;
         }
 
-        // Calcular si datos están completos
-        const isComplete = body.rfc &&
+        // Calcular si datos están completos (Convertir a booleano real)
+        const isComplete = !!(
+            body.rfc &&
             body.razon_social &&
             body.regimen_fiscal &&
             body.uso_cfdi &&
-            body.direccion_fiscal?.cp;
+            body.direccion_fiscal?.cp
+        );
 
-        updates.fiscal_data_completed = isComplete || false;
+        updates.fiscal_data_completed = isComplete;
 
         // Guardar en BD
         const { error: updateError } = await supabase
