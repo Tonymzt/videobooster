@@ -46,10 +46,17 @@ export function AuthProvider({ children }) {
         return data;
     };
 
-    const signUp = async (email, password) => {
+    const signUp = async (email, password, username, accountType) => {
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
+            options: {
+                data: {
+                    username: username,
+                    full_name: username,
+                    account_type: accountType
+                }
+            }
         });
 
         if (error) throw error;
@@ -61,12 +68,20 @@ export function AuthProvider({ children }) {
         router.push('/login');
     };
 
+    const updatePassword = async (newPassword) => {
+        const { error } = await supabase.auth.updateUser({
+            password: newPassword
+        });
+        if (error) throw error;
+    };
+
     const value = {
         user,
         loading,
         signIn,
         signUp,
         signOut,
+        updatePassword,
     };
 
     return (

@@ -8,8 +8,7 @@ const LEONARDO_API_URL = 'https://cloud.leonardo.ai/api/rest/v1';
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
 /**
- * Genera un video usando Leonardo AI Motion
- * ACTUALIZADO: Usa init_generation_image_id para respetar la imagen de referencia
+ * Genera un video usando Leonardo AI para imagen + Fal.ai para video
  */
 async function generateVideoWithLeonardo(params) {
     const { prompt, model, cameraMove, shotType, cameraAngle, duration, referenceImageUrl } = params;
@@ -17,361 +16,177 @@ async function generateVideoWithLeonardo(params) {
     // Construir el prompt enriquecido
     const enrichedPrompt = `${prompt}. Camera: ${cameraMove}, Shot: ${shotType}, Angle: ${cameraAngle}`;
 
-    try {
-        let leonardoImageId = null;
+    // Variables de estado
+    let leonardoImageId = null;
+    let imageUrl = null;
+    let generationId = null;
 
-        // PASO 0: Si hay imagen de referencia, subirla a Leonardo primero
+    try {
+        // PASO 0: Subir imagen de referencia si existe
         if (referenceImageUrl) {
             console.log('📸 Subiendo imagen de referencia a Leonardo:', referenceImageUrl);
-
             try {
-                // Paso 0.1: Solicitar URL presigned a Leonardo
+                // Paso 0.1: Solicitar URL presigned
                 const initImageResponse = await fetch(`${LEONARDO_API_URL}/init-image`, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${LEONARDO_API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        extension: 'jpg'
-                    })
+                    headers: { 'Authorization': `Bearer ${LEONARDO_API_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ extension: 'jpg' })
                 });
 
-                const initResponseText = await initImageResponse.text();
+                if (!initImageResponse.ok) throw new Error(`Init-image falló: ${initImageResponse.status}`);
+                const initData = await initImageResponse.json();
 
-                if (!initImageResponse.ok) {
-                    console.error('❌ Error en /init-image:', initResponseText);
-                    throw new Error(`Init-image falló: ${initImageResponse.status}`);
-                }
-
-                const initData = JSON.parse(initResponseText);
-                console.log('✅ Leonardo /init-image respondió correctamente');
-
-                // Extraer datos de la respuesta
-                // Leonardo devuelve campos para POST en 'uploadInitImage.fields' (string JSON)
                 const uploadObj = initData.uploadInitImage;
-                const uploadUrl = uploadObj?.url;
-                const fieldsString = uploadObj?.fields;
-                const imageId = uploadObj?.id;
-
-                if (!uploadUrl || !fieldsString || !imageId) {
-                    throw new Error('Leonardo no devolvió datos completos (url, fields, id)');
+                if (!uploadObj?.url || !uploadObj?.fields || !uploadObj?.id) {
+                    throw new Error('Datos incompletos de Leonardo init-image');
                 }
 
-                console.log('🆔 Leonardo Image ID:', imageId);
-
-                // Paso 0.2: Descargar imagen de R2
-                console.log('📥 Descargando imagen de R2...');
+                // Paso 0.2: Descargar de R2
                 const r2Response = await fetch(referenceImageUrl);
-                if (!r2Response.ok) {
-                    throw new Error(`No se pudo descargar de R2: ${r2Response.status}`);
-                }
-
+                if (!r2Response.ok) throw new Error('Falló descarga R2');
                 const imageBlob = await r2Response.blob();
-                console.log('✅ Imagen descargada:', (imageBlob.size / 1024).toFixed(2), 'KB');
 
-                // Paso 0.3: Parsear fields (es un string JSON)
-                const fields = JSON.parse(fieldsString);
-                console.log('📋 Fields parseados, cantidad de campos:', Object.keys(fields).length);
-
-                // Paso 0.4: Construir FormData con los campos de S3
+                // Paso 0.3-0.5: Subir a S3
+                const fields = JSON.parse(uploadObj.fields);
                 const formData = new FormData();
-
-                // IMPORTANTE: Agregar campos en el orden correcto
-                // Primero todos los campos de autenticación de AWS
-                Object.keys(fields).forEach(key => {
-                    formData.append(key, fields[key]);
-                });
-
-                // ÚLTIMO: Agregar el archivo (DEBE ir al final)
+                Object.keys(fields).forEach(key => formData.append(key, fields[key]));
                 formData.append('file', imageBlob, 'image.jpg');
-                console.log('   ✓ Campos y Archivo agregados al FormData');
 
-                // Paso 0.5: Subir a S3 usando POST con FormData
-                console.log('📤 Subiendo a S3 de Leonardo via POST FormData...');
-                console.log('   URL:', uploadUrl);
+                const uploadResponse = await fetch(uploadObj.url, { method: 'POST', body: formData });
+                if (!uploadResponse.ok) throw new Error('Falló upload a S3 Leonardo');
 
-                const uploadResponse = await fetch(uploadUrl, {
-                    method: 'POST',  // ← CRÍTICO: POST, no PUT
-                    body: formData,  // ← FormData con campos + archivo
-                    // NO agregar Content-Type manual, fetch lo hace
-                });
+                leonardoImageId = uploadObj.id;
+                console.log('✅ Imagen subida a Leonardo ID:', leonardoImageId);
 
-                // S3 devuelve XML, no JSON, pero si es 200/204 es éxito.
-                if (!uploadResponse.ok) {
-                    const uploadResponseText = await uploadResponse.text();
-                    console.error('❌ Error subiendo a S3:', uploadResponseText);
-                    throw new Error(`Upload a S3 falló: ${uploadResponse.status}`);
-                }
-
-                console.log('✅ ¡Imagen subida exitosamente a Leonardo S3!');
-                console.log('🆔 Image ID confirmado:', imageId);
-
-                // Esperar a que Leonardo procese la imagen interna (evita error "invalid init generation image id")
-                console.log('⏳ Esperando 3s para propagación de imagen en Leonardo...');
+                // Esperar propagación
                 await new Promise(resolve => setTimeout(resolve, 3000));
 
-                leonardoImageId = imageId;
-
-            } catch (uploadError) {
-                console.error('═'.repeat(60));
-                console.error('💥 ERROR EN UPLOAD DE IMAGEN:', uploadError.message);
-                console.error(uploadError); // Loguear objeto completo si es posible
-                console.error('═'.repeat(60));
-                console.warn('⚠️ Continuando sin imagen de referencia...');
-                leonardoImageId = null;
+            } catch (e) {
+                console.warn('⚠️ Falló subida de ref image, continuando sin ella:', e.message);
             }
         }
 
-        // 🔍 DEBUG: Forzar Vision XL para asegurar compatibilidad con init_image
-        const modelId = '5c232a9e-9061-4777-980a-ddc8e65647c6'; // Leonardo Vision XL
-        console.log('🎨 Forzando modelo Vision XL para mejor soporte de init_image');
-
-        console.log("🎬 Generando con Leonardo AI");
-        console.log("   Modelo:", modelId);
-        console.log("   Prompt:", enrichedPrompt.substring(0, 100) + '...');
-        console.log("   Imagen de referencia:", leonardoImageId || 'Ninguna');
-
-        // PASO 1: Generar imagen base
+        // PASO 1: Generar imagen base (Vision XL)
+        const modelId = '5c232a9e-9061-4777-980a-ddc8e65647c6';
         const generationPayload = {
             prompt: enrichedPrompt,
             modelId: modelId,
             width: 1024,
-            height: 576, // 16:9 más estable
+            height: 576,
             num_images: 1,
             presetStyle: "CINEMATIC",
             alchemy: true,
             photoReal: false,
         };
 
-        // SI HAY IMAGEN DE REFERENCIA: Usar ControlNet en lugar de init_generation_image_id
         if (leonardoImageId) {
-            console.log('🎨 Usando ControlNet con imagen de referencia ID:', leonardoImageId);
-
-            // Usamos Image Guidance (Structure / Depth) para mantener la forma del producto
-            // preprocessorId 133 = Depth Analysis
             generationPayload.controlnets = [{
                 initImageId: leonardoImageId,
-                initImageType: "UPLOADED",  // CRÍTICO: Indica que es un upload
+                initImageType: "UPLOADED",
                 preprocessorId: 133,
-                weight: 0.75 // Usamos weight numérico para mayor control
+                weight: 0.75
             }];
-
-            console.log('📋 ControlNet configurado:', JSON.stringify(generationPayload.controlnets));
         }
 
-        // 🔍 DEBUG: Ver payload exacto
-        console.log('═'.repeat(60));
-        console.log('🔍 PAYLOAD GENERATION ENVIADO:');
-        console.log(JSON.stringify(generationPayload, null, 2));
-        console.log('═'.repeat(60));
-
+        console.log('🎬 Generando imagen base...');
         const imageResponse = await fetch(`${LEONARDO_API_URL}/generations`, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${LEONARDO_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Authorization': `Bearer ${LEONARDO_API_KEY}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(generationPayload)
         });
 
-        if (!imageResponse.ok) {
-            const errorText = await imageResponse.text();
-            console.error("❌ Leonardo Image API Error:", errorText);
-            throw new Error(`Leonardo API error: ${imageResponse.status} - ${errorText}`);
-        }
-
+        if (!imageResponse.ok) throw new Error(`Leonardo Image Gen falló: ${imageResponse.status}`);
         const imageData = await imageResponse.json();
-        const generationId = imageData.sdGenerationJob.generationId;
+        generationId = imageData.sdGenerationJob.generationId;
 
-        console.log('⏳ Esperando generación de imagen, ID:', generationId);
-
-        // Esperar a que la imagen esté lista (polling)
-        let imageUrl = null;
+        // Polling Imagen
         let attempts = 0;
-        while (!imageUrl && attempts < 40) { // 80 segs max
+        while (!imageUrl && attempts < 40) {
             await new Promise(resolve => setTimeout(resolve, 2000));
-
-            const statusResponse = await fetch(`${LEONARDO_API_URL}/generations/${generationId}`, {
+            const statusRes = await fetch(`${LEONARDO_API_URL}/generations/${generationId}`, {
                 headers: { 'Authorization': `Bearer ${LEONARDO_API_KEY}` }
             });
-
-            if (!statusResponse.ok) {
-                attempts++;
-                continue;
+            if (statusRes.ok) {
+                const data = await statusRes.json();
+                const job = data.generations_by_pk;
+                if (job?.status === 'COMPLETE' && job.generated_images?.[0]?.url) {
+                    imageUrl = job.generated_images[0].url;
+                } else if (job?.status === 'FAILED') {
+                    throw new Error('Generación de imagen falló');
+                }
             }
-
-            const statusData = await statusResponse.json();
-            const job = statusData.generations_by_pk;
-
-            if (job && job.status === 'COMPLETE' && job.generated_images?.length > 0) {
-                imageUrl = job.generated_images[0].url;
-                console.log('✅ Imagen generada:', imageUrl);
-            } else if (job && job.status === 'FAILED') {
-                throw new Error('Generación de imagen falló en Leonardo');
-            }
-
             attempts++;
         }
 
-        if (!imageUrl) {
-            throw new Error('Timeout esperando generación de imagen');
-        }
+        if (!imageUrl) throw new Error('Timeout generando imagen base');
+        console.log('✅ Imagen Base Lista:', imageUrl);
 
-        // PASO 2: Convertir imagen a video con Motion SVD
-        console.log('🎥 Intentando convertir a video con Motion SVD...');
-
+        // PASO 2: Generar Video (FAL.AI)
+        console.log('🎬 Iniciando Fal.ai (Minimax)...');
         try {
-            // Obtener el imageId de la imagen generada
-            console.log('📋 Consultando detalles de la generación ID:', generationId);
+            const fal = (await import('@fal-ai/serverless-client')).default;
 
-            const statusResponse = await fetch(`${LEONARDO_API_URL}/generations/${generationId}`, {
-                headers: { 'Authorization': `Bearer ${LEONARDO_API_KEY}` }
-            });
+            // Webhook dynamic URL
+            // Ojo: process.env.NEXT_PUBLIC_APP_URL debe ser definida en Cloud Run
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null;
+            const webhookUrl = appUrl ? `${appUrl}/api/webhooks/fal` : null;
 
-            if (!statusResponse.ok) {
-                const errorText = await statusResponse.text();
-                console.error('❌ Error consultando generación:', errorText);
-                throw new Error('No se pudo obtener imageId para motion');
-            }
-
-            const statusData = await statusResponse.json();
-            // console.log('📋 Respuesta de generación:', JSON.stringify(statusData, null, 2)); // Demasiado ruido
-
-            const imageId = statusData.generations_by_pk?.generated_images?.[0]?.id;
-
-            if (!imageId) {
-                console.error('❌ No se encontró imageId en la respuesta');
-                console.error('Estructura recibida:', Object.keys(statusData));
-                throw new Error('ImageId no disponible para motion');
-            }
-
-            console.log('🆔 Image ID para motion:', imageId);
-
-            // Llamar a Motion SVD con parámetros optimizados
-            console.log('🎬 Iniciando generación de video Motion...');
-
-            const motionResponse = await fetch(`${LEONARDO_API_URL}/generations-motion-svd`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${LEONARDO_API_KEY}`,
-                    'Content-Type': 'application/json'
+            const falPayload = {
+                input: {
+                    image_url: imageUrl,
+                    prompt: enrichedPrompt,
                 },
-                body: JSON.stringify({
-                    imageId: imageId, // Usar imageId (nombre campo antiguo era generatedImageId, API v1 usa imageId)
-                    motionStrength: 3,  // 1-10, 3 es más estable que 5
-                    isPublic: false
-                })
-            });
+                webhookUrl: webhookUrl
+            };
 
-            const motionResponseText = await motionResponse.text();
-            console.log('📥 Respuesta Motion SVD (status):', motionResponse.status);
-            // console.log('📥 Respuesta Motion SVD (body):', motionResponseText);
+            const { request_id } = await fal.queue.submit("fal-ai/minimax-video/image-to-video", falPayload);
+            console.log('🚀 Video Job enviado a Fal:', request_id);
 
-            if (!motionResponse.ok) {
-                console.error('❌ Error en Motion SVD:', motionResponseText);
-                throw new Error(`Motion SVD falló: ${motionResponse.status}`);
-            }
+            // Intentar guardar en DB (si falla, no rompe el flujo, pero avisa)
+            try {
+                const { createClient } = await import('@supabase/supabase-js');
+                const supabase = createClient(
+                    process.env.NEXT_PUBLIC_SUPABASE_URL,
+                    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+                );
 
-            const motionData = JSON.parse(motionResponseText);
-            const motionId = motionData.motionSvdGenerationJob?.generationId;
-
-            if (!motionId) {
-                console.error('❌ No se obtuvo motionId');
-                console.error('Respuesta completa:', motionResponseText);
-                throw new Error('Motion no devolvió generationId');
-            }
-
-            console.log('🆔 Motion Generation ID:', motionId);
-            console.log('⏳ Esperando video (puede tardar 30-60 segundos)...');
-
-            // Polling del video con timeout aumentado
-            let videoUrl = null;
-            let mAttempts = 0;
-            const maxAttempts = 60; // 60 intentos × 3s = 3 minutos max
-
-            while (!videoUrl && mAttempts < maxAttempts) {
-                await new Promise(resolve => setTimeout(resolve, 3000));
-
-                const mStatus = await fetch(`${LEONARDO_API_URL}/generations-motion/${motionId}`, {
-                    headers: { 'Authorization': `Bearer ${LEONARDO_API_KEY}` }
+                await supabase.from('video_generations').insert({
+                    generation_id: request_id,
+                    prompt: enrichedPrompt,
+                    image_url: imageUrl,
+                    status: 'PENDING',
+                    provider: 'FAL_AI_MINIMAX'
                 });
-
-                if (!mStatus.ok) {
-                    // console.warn(`⚠️ Error consultando motion (intento ${mAttempts + 1}/${maxAttempts})`);
-                    mAttempts++;
-                    continue;
-                }
-
-                const mData = await mStatus.json();
-                const motionJob = mData.generations_by_pk;
-
-                if (motionJob?.status === 'COMPLETE' && motionJob.generated_videos?.[0]?.url) {
-                    videoUrl = motionJob.generated_videos[0].url;
-                    console.log('✅ ¡Video generado exitosamente!');
-                    console.log('🎥 Video URL:', videoUrl);
-                } else if (motionJob?.status === 'FAILED') {
-                    console.error('❌ Motion falló en Leonardo');
-                    // console.error('Motivo:', motionJob.error || 'Desconocido');
-                    break;
-                } else {
-                    if (mAttempts % 5 === 0) {
-                        console.log(`⏳ Motion en progreso... status: ${motionJob?.status} (${mAttempts}s)`);
-                    }
-                }
-
-                mAttempts++;
+            } catch (dbErr) {
+                console.warn('⚠️ No se pudo guardar en DB (posible falta de tabla/env):', dbErr.message);
             }
 
-            if (videoUrl) {
-                console.log('🎉 Video completo generado con Motion SVD');
-                return {
-                    success: true,
-                    videoUrl,
-                    imageUrl,
-                    generationId: motionId,
-                    hasMotion: true
-                };
-            } else {
-                console.warn('⚠️ Timeout esperando video, usando imagen estática');
-            }
+            return {
+                success: true,
+                videoId: request_id,
+                status: 'PROCESSING',
+                videoUrl: null,
+                imageUrl: imageUrl,
+                message: 'Video procesándose en segundo plano'
+            };
 
-        } catch (motionError) {
-            console.error('═'.repeat(60));
-            console.error('💥 ERROR EN MOTION SVD:');
-            console.error('Mensaje:', motionError.message);
-            // console.error('Stack:', motionError.stack);
-            console.error('═'.repeat(60));
-            console.warn('⚠️ Continuando con imagen estática...');
+        } catch (falErr) {
+            console.error('Fal Error:', falErr);
+            // Fallback a devolver solo la imagen
+            return {
+                success: true,
+                videoUrl: imageUrl,
+                imageUrl: imageUrl,
+                isImageOnly: true,
+                error: 'Fallo motor de video, devolviendo imagen estática'
+            };
         }
-
-        // Fallback: Devolver imagen estática como "video"
-        console.log('═'.repeat(60));
-        console.log('📸 FALLBACK: Devolviendo imagen estática');
-        console.log('Razón: Motion SVD no disponible o timeout');
-        console.log('Imagen generada correctamente con referencia del producto');
-        console.log('═'.repeat(60));
-
-        return {
-            success: true,
-            videoUrl: imageUrl,
-            imageUrl,
-            generationId,
-            isImageOnly: true,
-            motionFailed: true,
-            message: 'Imagen generada correctamente. Video en proceso o no disponible.'
-        };
 
     } catch (error) {
-        console.error('💥 Error crítico en Leonardo AI:', error);
-
-        // Fallback final: Video demo
+        console.error('💥 Error Pipeline:', error);
         return {
-            success: true,
-            videoUrl: "https://pub-4b811ce121cb48039a24266a90866d0a.r2.dev/library/inspiration/videos/car_chase.mp4",
-            imageUrl: "https://pub-4b811ce121cb48039a24266a90866d0a.r2.dev/library/inspiration/thumbnails/telefono1.webp",
-            generationId: "demo_fallback",
-            isDemo: true
+            success: false,
+            error: error.message
         };
     }
 }
@@ -424,9 +239,6 @@ export async function POST(request) {
             audioEnabled,
             dubbingText,
             duration,
-            quality,
-            format,
-            videoCount,
             referenceImages
         } = body;
 
@@ -448,17 +260,12 @@ export async function POST(request) {
         // Preparar URL de imagen de referencia
         let referenceImageUrl = null;
         if (referenceImages && referenceImages.length > 0) {
-            // Tomar la primera imagen de R2
             referenceImageUrl = referenceImages[0];
-            console.log('📸 Usando imagen de referencia:', referenceImageUrl);
         }
 
-        console.log('🎬 Iniciando generación de video:', {
-            prompt: prompt.substring(0, 50) + '...',
-            model,
-        });
+        console.log('🎬 Iniciando generación de video:', { prompt: prompt.substring(0, 30) });
 
-        // Generar video con Leonardo AI
+        // Generar video 
         const videoResult = await generateVideoWithLeonardo({
             prompt,
             model,
@@ -466,7 +273,7 @@ export async function POST(request) {
             shotType,
             cameraAngle,
             duration,
-            referenceImageUrl // <--- URL PÚBLICA DE R2 DIRECTAMENTE
+            referenceImageUrl
         });
 
         // Generar audio si está habilitado

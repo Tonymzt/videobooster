@@ -1,5 +1,20 @@
 # Changelog - VideoBooster
 
+## [v2.0.1] - 6 Febrero 2026
+
+### Removed
+- 🗑️ **Eliminado completamente sistema de scraping**
+  - Archivos eliminados: `src/scraper.js`, `src/selectors.js`
+  - Dependencias eliminadas: puppeteer, cheerio
+  - Endpoints eliminados: `/api/scrape`
+  - Razón: Pivote a arquitectura de upload directo
+  
+### Cleaned
+- 🧹 **Código limpio sin warnings de deprecated**
+  - Cero rastros de scraper en logs
+  - Cero imports obsoletos
+  - Cero comentarios de código muerto
+
 ## [Unreleased] - Enero 2026
 
 ### 🎯 PIVOTE ARQUITECTÓNICO MAYOR

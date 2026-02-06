@@ -5,7 +5,6 @@
 const { Worker } = require('bullmq');
 const logger = require('../utils/logger');
 const { updateJobStatus, completeJob, failJob } = require('../services/database');
-const { scrapeProduct } = require('../scraper');
 const { processProductImages } = require('../services/imageProcessor');
 const { generateBackground } = require('../services/backgroundGenerator');
 const { generateAvatarIntro } = require('../services/avatarGenerator');
@@ -32,23 +31,26 @@ async function processVideoJob(job) {
         logger.info('═'.repeat(60));
 
         // ═══════════════════════════════════════════════════════════
-        // PASO 1: SCRAPING
+        // PASO 1: RECUPERAR DATOS (Ex-Scraping)
         // ═══════════════════════════════════════════════════════════
-        logger.info('\n📌 PASO 1/7: Scraping del producto...');
-        await updateJobStatus(jobId, { status: 'scraping', progress: 5 });
+        logger.info('\n📌 PASO 1/7: Recuperando datos del producto...');
+        await updateJobStatus(jobId, { status: 'preparing', progress: 5 });
         await job.updateProgress(5);
 
-        const productData = await scrapeProduct(productUrl);
+        // AHORA: Los datos vienen directo del job.data si ya fueron subidos,
+        // o se recuperan de la DB si es una URL conocida.
+        let productData = job.data.productData || {
+            success: true,
+            title: "Producto VideoBooster",
+            images: job.data.images || [],
+            price: ""
+        };
 
-        if (!productData.success) {
-            throw new Error(`Scraping falló: ${productData.error}`);
-        }
-
-        logger.info(`✅ Producto extraído: ${productData.title}`);
-        logger.info(`📷 Imágenes encontradas: ${productData.images.length}`);
+        logger.info(`✅ Datos listos: ${productData.title}`);
+        logger.info(`📷 Imágenes a procesar: ${productData.images.length}`);
 
         await updateJobStatus(jobId, {
-            status: 'scraping',
+            status: 'preparing',
             progress: 10,
             product_data: productData,
         });

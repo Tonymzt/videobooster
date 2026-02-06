@@ -5,7 +5,8 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, LogOut, Video, Sparkles, FolderIcon, Mic2 } from 'lucide-react';
+import { LayoutDashboard, LogOut, Video, Sparkles, FolderIcon, Mic2, Settings } from 'lucide-react';
+import ChangePasswordDialog from '@/components/auth/ChangePasswordDialog';
 
 export default function DashboardLayout({ children }) {
     const { user, loading, signOut } = useAuth();
@@ -99,18 +100,25 @@ export default function DashboardLayout({ children }) {
                 </nav>
 
                 {/* User Area */}
-                <div className="p-4 border-t border-white/5 bg-[#0d0d0f]/50 shrink-0">
-                    <div className="flex items-center gap-3 px-2 mb-4">
+                <div className="p-4 border-t border-white/5 bg-[#0d0d0f]/50 shrink-0 space-y-3">
+                    <div className="flex items-center gap-3 px-2">
                         <div className="w-8 h-8 rounded-full bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 text-xs font-bold">
                             {user.email[0].toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-white truncate">{user.email.split('@')[0]}</p>
+                            <p className="text-xs font-bold text-white truncate">
+                                {user.user_metadata?.username || user.user_metadata?.full_name || user.email.split('@')[0]}
+                            </p>
                             <p className="text-[10px] text-slate-500 truncate">Plan Pro ✨</p>
                         </div>
+
+                        <Link href="/dashboard/settings" className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white">
+                            <Settings className="h-4 w-4" />
+                        </Link>
                     </div>
+
                     <button
-                        onClick={signOut}
+                        onClick={() => signOut()}
                         className="flex items-center gap-2 w-full px-3 py-2 text-xs font-medium text-slate-500 hover:text-red-400 hover:bg-red-500/5 rounded-lg transition-all"
                     >
                         <LogOut className="h-4 w-4" />

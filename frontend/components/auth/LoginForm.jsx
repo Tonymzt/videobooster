@@ -29,10 +29,7 @@ export default function LoginForm() {
         }
     };
 
-    const useDemoAccount = () => {
-        setEmail('demo@videobooster.com');
-        setPassword('demo123456');
-    };
+
 
     return (
         <div className="w-full max-w-md space-y-8 p-10 bg-[#0a0a0c]/80 backdrop-blur-2xl rounded-[40px] border border-white/10 shadow-2xl relative overflow-hidden group">
@@ -106,16 +103,6 @@ export default function LoginForm() {
                     <Button type="submit" className="w-full h-14 bg-pink-600 hover:bg-pink-500 text-white rounded-2xl font-black text-sm shadow-xl shadow-pink-600/20 transition-all active:scale-95 group" disabled={loading}>
                         {loading ? 'Sincronizando...' : 'Entrar al Dashboard'}
                         <Sparkles className="h-4 w-4 ml-2 group-hover:rotate-12 transition-transform" />
-                    </Button>
-
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        className="w-full h-12 text-slate-400 hover:text-white hover:bg-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest"
-                        onClick={useDemoAccount}
-                        disabled={loading}
-                    >
-                        🚀 Demo Express
                     </Button>
                 </div>
 
