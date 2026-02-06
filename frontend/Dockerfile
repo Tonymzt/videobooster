@@ -1,55 +1,77 @@
-FROM node:20-alpine AS base
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STAGE 1: Dependencies
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FROM node:20-alpine AS deps
 
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json package-lock.json* ./
-RUN npm ci
+# Copiar package files del monorepo
+COPY package*.json ./
+COPY frontend/package*.json ./frontend/
 
-# Rebuild the source code only when needed
-FROM base AS builder
+# Instalar dependencias
+RUN npm ci --workspace=frontend --include=dev
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STAGE 2: Builder con ARGs
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FROM node:20-alpine AS builder
+
 WORKDIR /app
+
+# Copiar dependencias instaladas
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY --from=deps /app/frontend/node_modules ./frontend/node_modules
 
-# Disable telemetry during the build.
-ENV NEXT_TELEMETRY_DISABLED 1
+# Copiar código fuente
+COPY frontend ./frontend
+COPY package*.json ./
 
-# DUMMY ENVS para que el build de Next.js pase sin errores 
-# (Supabase intenta inicializarse en build time para páginas estáticas)
-ENV NEXT_PUBLIC_SUPABASE_URL="https://dummy.supabase.co"
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY="dummy-key-for-build-only"
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# VARIABLES DE BUILD (ARG)
+# Se pasan desde cloudbuild.yaml con --build-arg
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+ARG NEXT_PUBLIC_R2_PUBLIC_URL
+ARG NEXT_PUBLIC_BACKEND_URL
 
+# Exportar como ENV para que Next.js las use en build
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV NEXT_PUBLIC_R2_PUBLIC_URL=$NEXT_PUBLIC_R2_PUBLIC_URL
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build Next.js con variables REALES
+WORKDIR /app/frontend
 RUN npm run build
 
-# Production image, copy all the files and run next
-FROM base AS runner
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STAGE 3: Runner (Producción)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FROM node:20-alpine AS runner
+
 WORKDIR /app
 
-ENV NODE_ENV production
-# Disable telemetry during runtime.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV PORT=8080
+ENV HOSTNAME="0.0.0.0"
 
+# Crear usuario no-root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy public folder
-COPY --from=builder /app/public ./public
+# Copiar archivos públicos
+COPY --from=builder /app/frontend/public ./public
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copiar archivos built (standalone)
+COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/static ./frontend/.next/static
 
 USER nextjs
 
-# Cloud Run requirement: Listen on PORT variable
-ENV PORT 8080
 EXPOSE 8080
 
-# server.js is created by next build from the standalone output
-CMD ["node", "server.js"]
+CMD ["node", "frontend/server.js"]

@@ -1,0 +1,69 @@
+steps:
+  # Paso 1: Instalar dependencias del Monorepo
+  - name: 'node:20-alpine'
+    entrypoint: npm
+    args: ['ci']
+    
+  # Paso 2: Build Docker image con ARGs (Horneado de variables NEXT_PUBLIC)
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'frontend/Dockerfile'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_SUPABASE_URL=https://sbdejytqnucpokrfrjzq.supabase.co'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZGVqeXRxbnVjcG9rcmZyanpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwODAwODgsImV4cCI6MjA4NTY1NjA4OH0.sK_x1uE8abz5ADS1reqvmhQ3qVOssxVTwMcSP03n4Lg'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_R2_PUBLIC_URL=https://pub-4b811ce121cb48039a24266a90866d0a.r2.dev'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_BACKEND_URL=https://videobooster-api-308931734317.us-east1.run.app'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/videobooster-frontend:$BUILD_ID'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/videobooster-frontend:latest'
+      - '.'
+    
+  # Paso 3: Push image al Registro
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'gcr.io/$PROJECT_ID/videobooster-frontend'
+    
+  # Paso 4: Deploy a Cloud Run con Inyección de Secretos
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'videobooster-frontend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/videobooster-frontend:$BUILD_ID'
+      - '--region'
+      - 'us-east1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-secrets'
+      - 'FISCAL_ENCRYPTION_KEY=fiscal-encryption-key:latest,SUPABASE_SERVICE_ROLE_KEY=supabase-service-key:latest'
+      - '--set-env-vars'
+      - 'NEXT_PUBLIC_SUPABASE_URL=https://sbdejytqnucpokrfrjzq.supabase.co,NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZGVqeXRxbnVjcG9rcmZyanpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwODAwODgsImV4cCI6MjA4NTY1NjA4OH0.sK_x1uE8abz5ADS1reqvmhQ3qVOssxVTwMcSP03n4Lg'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '10'
+
+# Optimizaciones del Build
+options:
+  machineType: 'E2_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: '1800s'
+
+images:
+  - 'gcr.io/$PROJECT_ID/videobooster-frontend:latest'
