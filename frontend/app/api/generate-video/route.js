@@ -61,12 +61,11 @@ async function generateVideoPipeline(params) {
                 process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
             );
 
-            await supabase.from('video_generations').insert({
-                generation_id: request_id,
-                prompt: enrichedPrompt,
-                image_url: imageUrl,
-                status: 'PENDING',
-                provider: 'FAL_AI_MINIMAX'
+            await supabase.from('video_jobs').insert({
+                job_id: request_id,
+                product_url: imageUrl,
+                status: 'pending',
+                progress: 10
             });
         } catch (dbErr) {
             console.warn('⚠️ No se pudo guardar en DB:', dbErr.message);
@@ -221,7 +220,7 @@ export async function POST(request) {
 
         return NextResponse.json({
             success: true,
-            jobId: `job_${Date.now()}`,
+            jobId: videoResult.videoId,
             videoUrl: null, // Viene por webhook
             imageUrl: videoResult.imageUrl,
             audioBase64,
