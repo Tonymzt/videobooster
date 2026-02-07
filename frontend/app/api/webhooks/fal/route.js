@@ -236,6 +236,8 @@ export async function POST(request) {
         console.log('✅ Validación exitosa');
         console.log('   Request ID:', request_id);
         console.log('   Status:', status);
+        console.log('   Payload Keys:', Object.keys(payload));
+        console.log('   Has Output:', !!payload.output, '| Has Payload:', !!payload.payload);
 
         // ────────────────────────────────────────────────────────────
         // 2. BUSCAR GENERACIÓN EN SUPABASE
@@ -275,8 +277,14 @@ export async function POST(request) {
             return NextResponse.json({ received: true });
         }
 
-        if (status !== 'COMPLETED') {
+        if (status !== 'COMPLETED' && status !== 'OK') {
             console.log(`⏳ Estado intermedio: ${status}`);
+            return NextResponse.json({ received: true });
+        }
+
+        // Si es OK o COMPLETED, pero no tiene output, seguimos esperando
+        if (!output) {
+            console.log(`⏳ Estado ${status} recibido pero sin output aún.`);
             return NextResponse.json({ received: true });
         }
 
