@@ -55,8 +55,14 @@ async function generateVideoPipeline(params) {
         };
 
         if (webhookUrl) {
-            falPayload.webhookUrl = webhookUrl;
+            falPayload.webhook_url = webhookUrl;
         }
+
+        console.log('📦 Enviando Fal Payload:', {
+            hasInput: !!falPayload.input,
+            hasWebhook: !!falPayload.webhook_url,
+            webhookPrefix: webhookUrl ? webhookUrl.substring(0, 40) + '...' : 'none'
+        });
 
         const { request_id } = await fal.queue.submit("fal-ai/minimax-video/image-to-video", falPayload);
         console.log('🚀 Video Job enviado a Fal:', request_id);
