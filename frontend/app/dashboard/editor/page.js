@@ -75,23 +75,7 @@ export default function EditorPage() {
 
 
 
-    // Cargar última generación al montar para el test de humo o recuperación de estado
-    useEffect(() => {
-        const fetchLastJob = async () => {
-            try {
-                const response = await fetch('/api/video-status/latest');
-                if (response.ok) {
-                    const statusData = await response.json();
-                    if (statusData.success && statusData.data) {
-                        setGeneratedVideo(statusData.data);
-                    }
-                }
-            } catch (err) {
-                console.warn("No se pudo cargar la última generación:", err);
-            }
-        };
-        fetchLastJob();
-    }, []);
+
 
     // Polling para actualizar el video generado
     useEffect(() => {
@@ -125,7 +109,11 @@ export default function EditorPage() {
     }, [generatedVideo]);
 
     const handleGenerate = async () => {
-        if (!videoDescription.trim()) return;
+        console.log('🚀 handleGenerate called. Description length:', videoDescription?.length);
+        if (!videoDescription.trim()) {
+            console.warn('⚠️ No hay descripción, abortando.');
+            return;
+        }
 
         setIsGenerating(true);
         setProgress(5);
@@ -294,7 +282,10 @@ export default function EditorPage() {
                                         Descargar
                                     </button>
                                     <button
-                                        onClick={() => setGeneratedVideo(null)}
+                                        onClick={() => {
+                                            console.log('🔄 Cleaning generatedVideo (Nuevo)');
+                                            setGeneratedVideo(null);
+                                        }}
                                         className="px-3 py-1.5 bg-white/10 text-white text-[10px] font-black rounded-lg hover:bg-white/20 transition-all"
                                     >
                                         Nuevo
@@ -314,7 +305,10 @@ export default function EditorPage() {
                                     {error}
                                 </p>
                                 <button
-                                    onClick={() => setError(null)}
+                                    onClick={() => {
+                                        console.log('🔄 Cleaning error (Intentar)');
+                                        setError(null);
+                                    }}
                                     className="mt-4 px-4 py-2 bg-[#ec4899] text-white text-[10px] font-black rounded-lg hover:bg-[#db2777] transition-all"
                                 >
                                     Intentar de nuevo
