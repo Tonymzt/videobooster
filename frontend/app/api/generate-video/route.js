@@ -12,8 +12,10 @@ const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 async function generateVideoPipeline(params) {
     const { prompt, cameraMove, shotType, cameraAngle, referenceImageUrl } = params;
 
-    // Construir el prompt enriquecido
-    const enrichedPrompt = `${prompt}. Camera: ${cameraMove}, Shot: ${shotType}, Angle: ${cameraAngle}`;
+    // Construir el prompt enriquecido evitanto duplicados si viene del Brain
+    const enrichedPrompt = prompt.includes(cameraMove)
+        ? prompt
+        : `${prompt}. Camera: ${cameraMove}, Shot: ${shotType}, Angle: ${cameraAngle}`;
 
     try {
         const fal = (await import('@fal-ai/serverless-client')).default;
@@ -35,9 +37,11 @@ async function generateVideoPipeline(params) {
         // PASO 2: Generar Video (FAL.AI Minimax)
         console.log('🎬 Iniciando Fal.ai (Minimax)...');
 
-        // Webhook dynamic URL
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
+        // Webhook dynamic URL: Forzar producción si no hay env para asegurar que Fal rinda cuentas
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL
+            || (process.env.NODE_ENV === 'production' ? 'https://videobooster-frontend-308931734317.us-east1.run.app' : null);
         const webhookUrl = appUrl ? `${appUrl}/api/webhooks/fal` : null;
+        console.log('🔗 Usando Webhook URL:', webhookUrl);
 
         const falPayload = {
             input: {
