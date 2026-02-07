@@ -40,31 +40,25 @@ async function generateVideoPipeline(params) {
         const appUrl = process.env.NEXT_PUBLIC_APP_URL
             || (process.env.NODE_ENV === 'production' ? 'https://videobooster-frontend-308931734317.us-east1.run.app' : null);
 
-        const webhookSecret = process.env.FAL_WEBHOOK_SECRET;
-        const webhookUrl = appUrl
-            ? (webhookSecret ? `${appUrl}/api/webhooks/fal?token=${webhookSecret}` : `${appUrl}/api/webhooks/fal`)
-            : null;
+        const webhookUrl = appUrl ? `${appUrl}/api/webhooks/fal` : null;
 
-        console.log('🔗 Usando Webhook URL:', webhookUrl ? webhookUrl.split('?')[0] + '?...' : 'null');
+        console.log('🔗 Usando Webhook URL:', webhookUrl);
 
-        const falPayload = {
+        const falOptions = {
             input: {
                 image_url: imageUrl,
                 prompt: enrichedPrompt,
-            }
+            },
+            webhookUrl: webhookUrl
         };
 
-        if (webhookUrl) {
-            falPayload.webhookUrl = webhookUrl;
-        }
+        console.log('📦 Enviando Fal Payload:', JSON.stringify({
+            hasInput: !!falOptions.input,
+            hasWebhook: !!falOptions.webhookUrl,
+            webhook: webhookUrl
+        }));
 
-        console.log('📦 Enviando Fal Payload:', {
-            hasInput: !!falPayload.input,
-            hasWebhook: !!falPayload.webhookUrl,
-            webhookPrefix: webhookUrl ? webhookUrl.substring(0, 40) + '...' : 'none'
-        });
-
-        const { request_id } = await fal.queue.submit("fal-ai/minimax-video/image-to-video", falPayload);
+        const { request_id } = await fal.queue.submit("fal-ai/minimax-video/image-to-video", falOptions);
         console.log('🚀 Video Job enviado a Fal:', request_id);
 
         // Guardar en DB
