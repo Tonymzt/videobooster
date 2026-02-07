@@ -200,7 +200,7 @@ export default function EditorPage() {
                         {generatedVideo ? (
                             // Video Generado
                             <div className="absolute inset-0">
-                                {generatedVideo.isImageOnly || generatedVideo.videoUrl.match(/\.(jpg|jpeg|png|webp)$/i) ? (
+                                {generatedVideo.isImageOnly || generatedVideo.videoUrl?.match(/\.(jpg|jpeg|png|webp)$/i) ? (
                                     <>
                                         <img
                                             src={generatedVideo.imageUrl || generatedVideo.videoUrl}
