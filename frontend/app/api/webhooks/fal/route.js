@@ -209,16 +209,24 @@ export async function POST(request) {
         }
 
         const payload = await request.json();
-        const signature = request.headers.get('x-fal-signature');
+        const secret = process.env.FAL_WEBHOOK_SECRET;
 
-        // console.log('📦 Payload:', JSON.stringify(payload).substring(0, 200) + '...');
+        if (secret) {
+            // Validar token en URL
+            const url = new URL(request.url);
+            const token = url.searchParams.get('token');
 
-        if (!validateFalSignature(payload, signature)) {
-            console.error('❌ FIRMA INVÁLIDA - Posible ataque');
-            return NextResponse.json(
-                { error: 'Invalid signature' },
-                { status: 401 }
-            );
+            if (!token || token !== secret) {
+                console.warn('⚠️ Webhook rechazado: Token inválido');
+                return NextResponse.json(
+                    { error: 'Unauthorized' },
+                    { status: 401 }
+                );
+            }
+
+            console.log('✅ Token validado correctamente');
+        } else {
+            console.warn('⚠️ FAL_WEBHOOK_SECRET no configurado - modo bypass');
         }
 
         const { request_id, status, error: falError } = payload;
