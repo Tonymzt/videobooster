@@ -8,11 +8,11 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 /**
  * Generar un nuevo video
  */
-export async function generateVideo(productUrl, userId) {
+export async function generateVideo(params, userId) {
     try {
         const response = await axios.post(`${API_BASE}/api/generate-video`, {
-            productUrl,
-            userId, // Enviar userId al backend para asociar el job
+            ...params,
+            userId,
         });
 
         return {

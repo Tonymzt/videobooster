@@ -14,6 +14,7 @@ import {
     Trash2,
     Wand2,
     Check,
+    Loader2,
     Info,
     MoreHorizontal,
     Volume2
@@ -74,9 +75,39 @@ export default function EditorPage() {
 
 
 
+    // Polling para actualizar el video generado
+    useEffect(() => {
+        if (!generatedVideo || generatedVideo.videoUrl || generatedVideo.isImageOnly) return;
+
+        const pollInterval = setInterval(async () => {
+            try {
+                const response = await fetch(`/api/video-status/${generatedVideo.generationId || generatedVideo.jobId}`);
+                if (response.ok) {
+                    const statusData = await response.json();
+                    if (statusData.success && statusData.data.status === 'completed') {
+                        setGeneratedVideo(prev => ({
+                            ...prev,
+                            videoUrl: statusData.data.videoUrl
+                        }));
+                        clearInterval(pollInterval);
+                    } else if (statusData.data?.status === 'failed') {
+                        setGeneratedVideo(prev => ({
+                            ...prev,
+                            isImageOnly: true
+                        }));
+                        clearInterval(pollInterval);
+                    }
+                }
+            } catch (err) {
+                console.error("Error en polling de editor:", err);
+            }
+        }, 4000);
+
+        return () => clearInterval(pollInterval);
+    }, [generatedVideo]);
+
     const handleGenerate = async () => {
         if (!videoDescription.trim()) return;
-        // ... (resto de handleGenerate)
 
         setIsGenerating(true);
         setProgress(5);
@@ -84,10 +115,10 @@ export default function EditorPage() {
         setGeneratedVideo(null);
 
         try {
-            // Simulamos progreso mientras esperamos respuesta (UX)
+            // Simulamos progreso inicial
             const progressInterval = setInterval(() => {
                 setProgress(prev => {
-                    if (prev >= 90) return 90; // Esperar al 100% real
+                    if (prev >= 90) return 90;
                     return prev + Math.floor(Math.random() * 5) + 1;
                 });
             }, 800);
@@ -97,6 +128,7 @@ export default function EditorPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     prompt: videoDescription,
+                    useBrain: true, // Siempre activar Brain en el editor pro
                     model: selectedModel.id,
                     cameraMove: selectedCameraMove,
                     shotType: selectedShotType,
@@ -121,7 +153,11 @@ export default function EditorPage() {
             const data = await response.json();
 
             setProgress(100);
-            setGeneratedVideo(data);
+            // IMPORTANTE: Aseguramos que el id del job sea consistente para el polling
+            setGeneratedVideo({
+                ...data,
+                jobId: data.generationId || data.jobId
+            });
 
             setTimeout(() => {
                 setIsGenerating(false);
@@ -200,18 +236,31 @@ export default function EditorPage() {
                         {generatedVideo ? (
                             // Video Generado
                             <div className="absolute inset-0">
-                                {generatedVideo.isImageOnly || generatedVideo.videoUrl?.match(/\.(jpg|jpeg|png|webp)$/i) ? (
+                                {(!generatedVideo.videoUrl || generatedVideo.isImageOnly || generatedVideo.videoUrl?.match(/\.(jpg|jpeg|png|webp)$/i)) ? (
                                     <>
                                         <img
                                             src={generatedVideo.imageUrl || generatedVideo.videoUrl}
                                             alt="Generación"
                                             className="w-full h-full object-cover"
                                         />
-                                        <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
-                                            <span className="bg-black/50 backdrop-blur text-white px-3 py-1 rounded-full text-xs font-semibold">
-                                                📷 Imagen Generada (Video falló)
-                                            </span>
-                                        </div>
+                                        {!generatedVideo.videoUrl && !generatedVideo.isImageOnly && (
+                                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex flex-col items-center justify-center">
+                                                <Loader2 className="w-10 h-10 text-white animate-spin mb-4" />
+                                                <p className="text-white text-sm font-bold uppercase tracking-widest">
+                                                    Creando Magia Audiovisual...
+                                                </p>
+                                                <p className="text-white/60 text-[10px] mt-2">
+                                                    Esto puede tardar unos 60 segundos
+                                                </p>
+                                            </div>
+                                        )}
+                                        {generatedVideo.isImageOnly && (
+                                            <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
+                                                <span className="bg-black/50 backdrop-blur text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                                    📷 Imagen Generada (Video falló)
+                                                </span>
+                                            </div>
+                                        )}
                                     </>
                                 ) : (
                                     <video
