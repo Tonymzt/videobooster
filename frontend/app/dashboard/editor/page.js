@@ -75,6 +75,24 @@ export default function EditorPage() {
 
 
 
+    // Cargar última generación al montar para el test de humo o recuperación de estado
+    useEffect(() => {
+        const fetchLastJob = async () => {
+            try {
+                const response = await fetch('/api/video-status/latest');
+                if (response.ok) {
+                    const statusData = await response.json();
+                    if (statusData.success && statusData.data) {
+                        setGeneratedVideo(statusData.data);
+                    }
+                }
+            } catch (err) {
+                console.warn("No se pudo cargar la última generación:", err);
+            }
+        };
+        fetchLastJob();
+    }, []);
+
     // Polling para actualizar el video generado
     useEffect(() => {
         if (!generatedVideo || generatedVideo.videoUrl || generatedVideo.isImageOnly) return;
