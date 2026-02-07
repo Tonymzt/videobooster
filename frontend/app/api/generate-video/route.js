@@ -55,12 +55,12 @@ async function generateVideoPipeline(params) {
         };
 
         if (webhookUrl) {
-            falPayload.webhook_url = webhookUrl;
+            falPayload.webhookUrl = webhookUrl;
         }
 
         console.log('📦 Enviando Fal Payload:', {
             hasInput: !!falPayload.input,
-            hasWebhook: !!falPayload.webhook_url,
+            hasWebhook: !!falPayload.webhookUrl,
             webhookPrefix: webhookUrl ? webhookUrl.substring(0, 40) + '...' : 'none'
         });
 
