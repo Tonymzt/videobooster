@@ -61,12 +61,11 @@ async function generateVideoPipeline(params) {
                 process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
             );
 
-            await supabase.from('video_generations').insert({
-                generation_id: request_id,
-                prompt: enrichedPrompt,
-                image_url: imageUrl,
-                status: 'PENDING',
-                provider: 'FAL_AI_MINIMAX'
+            await supabase.from('video_jobs').insert({
+                job_id: request_id,
+                product_url: imageUrl,
+                status: 'pending',
+                progress: 10
             });
         } catch (dbErr) {
             console.warn('⚠️ No se pudo guardar en DB:', dbErr.message);
@@ -163,9 +162,45 @@ export async function POST(request) {
 
         console.log('🎬 Iniciando generación de video (Fal.ai Pure):', { prompt: prompt.substring(0, 30) });
 
+        let enhancedPrompt = prompt;
+        let enhancedDubbingText = dubbingText;
+
+        // Si usuario activó "IA Magic", usar Brain primero
+        if (body.useBrain) {
+            console.log('🧠 IA Magic activa, llamando al Brain...');
+            try {
+                // Llamamos internamente a la lógica del brain o vía fetch si es necesario
+                // Para consistencia con el plan, usamos fetch a la URL base
+                const appUrl = process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${process.env.PORT || 3001}`;
+                const brainResponse = await fetch(`${appUrl}/api/brain`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        description: prompt,
+                        imageUrl: referenceImageUrl,
+                        cameraMovement: cameraMove || 'static',
+                        shotType: shotType || 'medium',
+                        angle: cameraAngle || 'eye_level',
+                        model: 'minimax'
+                    })
+                });
+
+                if (brainResponse.ok) {
+                    const brainData = await brainResponse.json();
+                    enhancedPrompt = brainData.visual_prompt;
+                    enhancedDubbingText = brainData.narration_script;
+                    console.log('🧠 Brain enhanced prompt:', enhancedPrompt);
+                } else {
+                    console.warn('⚠️ Brain API falló, usando prompt original');
+                }
+            } catch (brainErr) {
+                console.error('❌ Error llamando al Brain:', brainErr);
+            }
+        }
+
         // Generar video con el nuevo pipeline de Fal
         const videoResult = await generateVideoPipeline({
-            prompt,
+            prompt: enhancedPrompt,
             cameraMove,
             shotType,
             cameraAngle,
@@ -179,13 +214,13 @@ export async function POST(request) {
 
         // Generar audio si está habilitado
         let audioBase64 = null;
-        if (audioEnabled && dubbingText) {
-            audioBase64 = await generateAudioWithElevenLabs(dubbingText);
+        if (audioEnabled && enhancedDubbingText) {
+            audioBase64 = await generateAudioWithElevenLabs(enhancedDubbingText);
         }
 
         return NextResponse.json({
             success: true,
-            jobId: `job_${Date.now()}`,
+            jobId: videoResult.videoId,
             videoUrl: null, // Viene por webhook
             imageUrl: videoResult.imageUrl,
             audioBase64,

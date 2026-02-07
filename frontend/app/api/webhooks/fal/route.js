@@ -161,13 +161,12 @@ async function streamVideoToR2(videoUrl, r2Key, tenantId) {
 async function updateGenerationStatus(requestId, updates) {
     const supabase = getSupabase();
     const { data, error } = await supabase
-        .from('video_generations')
+        .from('video_jobs')
         .update({
             ...updates,
             updated_at: new Date().toISOString(),
         })
-        .eq('generation_id', requestId) // OJO: Usamos generation_id como clave primaria usualmente
-        // Si tu tabla usa 'fal_request_id', ajusta aquí. Asumiré generation_id por consistencia anterior.
+        .eq('job_id', requestId)
         .select()
         .single();
 
@@ -244,9 +243,9 @@ export async function POST(request) {
 
         const supabase = getSupabase();
         const { data: generation, error: fetchError } = await supabase
-            .from('video_generations')
+            .from('video_jobs')
             .select('*')
-            .eq('generation_id', request_id) // Asumimos generation_id = request_id
+            .eq('job_id', request_id)
             .single();
 
         if (fetchError || !generation) {
@@ -268,8 +267,9 @@ export async function POST(request) {
             console.error('   Error:', falError || 'Unknown error');
 
             await updateGenerationStatus(request_id, {
-                status: 'FAILED', // Usamos mayúsculas por convención anterior
+                status: 'failed',
                 error_message: falError || 'Fal.ai generation failed',
+                progress: 0
             });
 
             return NextResponse.json({ received: true });
@@ -310,9 +310,9 @@ export async function POST(request) {
         // ────────────────────────────────────────────────────────────
 
         await updateGenerationStatus(request_id, {
-            status: 'COMPLETED',
+            status: 'completed',
             video_url: publicVideoUrl,
-            // completed_at: new Date().toISOString(), // Si la columna existe
+            progress: 100
         });
 
         // ────────────────────────────────────────────────────────────

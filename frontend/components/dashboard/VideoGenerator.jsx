@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Loader2, CheckCircle2, XCircle, ExternalLink } from 'lucide-react';
 import { generateVideo, getVideoStatus } from '@/lib/api';
+import CameraControls from './CameraControls';
 
 const STATUS_LABELS = {
     pending: 'En cola',
@@ -31,7 +32,13 @@ const STATUS_COLORS = {
 };
 
 export default function VideoGenerator({ onVideoComplete, preselectedImages, preselectedAvatar }) {
-    const [url, setUrl] = useState('');
+    const [prompt, setPrompt] = useState('');
+    const [cameraConfig, setCameraConfig] = useState({
+        cameraMove: 'static',
+        shotType: 'medium',
+        cameraAngle: 'eye_level'
+    });
+    const [useBrain, setUseBrain] = useState(true);
     const [loading, setLoading] = useState(false);
     const [currentJob, setCurrentJob] = useState(null);
     const [error, setError] = useState('');
@@ -69,7 +76,12 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
         setCurrentJob(null);
 
         try {
-            const result = await generateVideo(url, user.id);
+            const result = await generateVideo({
+                prompt,
+                ...cameraConfig,
+                useBrain,
+                referenceImages: preselectedImages?.map(img => img.url) || []
+            }, user.id);
 
             if (result.success) {
                 setCurrentJob({
@@ -77,7 +89,7 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
                     status: 'pending',
                     progress: 0,
                 });
-                setUrl(''); // Limpiar input
+                setPrompt(''); // Limpiar input
             } else {
                 setError(result.error);
             }
@@ -96,13 +108,13 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
                     La Caja Mágica
                 </CardTitle>
                 <CardDescription>
-                    Pega la URL de un producto de Amazon o MercadoLibre
+                    Describe tu producto o la escena que quieres generar
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 {/* Selección Actual del Dashboard */}
                 {(preselectedImages?.length > 0 || preselectedAvatar) && (
-                    <div className="flex flex-wrap gap-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <div className="flex flex-wrap gap-4 p-4 bg-blue-50/50 rounded-lg border border-blue-100/50">
                         {preselectedAvatar && (
                             <div className="flex items-center gap-2">
                                 <Badge variant="default" className="bg-blue-600">
@@ -121,40 +133,45 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
                 )}
 
                 {/* Formulario */}
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="flex flex-col gap-4">
                         <label className="text-sm font-medium text-gray-700">
-                            Paso 1: Pega la URL del producto (Amazon/MercadoLibre)
+                            Paso 1: Describe tu video (o pega beneficios del producto)
                         </label>
-                        <div className="flex gap-2">
-                            <Input
-                                type="url"
-                                placeholder="https://www.amazon.com.mx/..."
-                                value={url}
-                                onChange={(e) => setUrl(e.target.value)}
-                                disabled={loading || currentJob}
-                                required
-                                className="flex-1"
-                            />
-                            <Button
-                                type="submit"
-                                disabled={loading || currentJob || !url}
-                                className="px-8 bg-black hover:bg-gray-800"
-                            >
-                                {loading ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Procesando...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Sparkles className="mr-2 h-4 w-4" />
-                                        ¡Generar Ahora!
-                                    </>
-                                )}
-                            </Button>
-                        </div>
+                        <Input
+                            placeholder="Ej: Un perfume elegante flotando en el espacio con pétalos de rosa..."
+                            value={prompt}
+                            onChange={(e) => setPrompt(e.target.value)}
+                            disabled={loading || currentJob}
+                            required
+                            className="w-full"
+                        />
                     </div>
+
+                    {/* Controles Cinematográficos */}
+                    <CameraControls
+                        onChange={setCameraConfig}
+                        useBrain={useBrain}
+                        onBrainToggle={() => setUseBrain(!useBrain)}
+                    />
+
+                    <Button
+                        type="submit"
+                        disabled={loading || currentJob || !prompt}
+                        className="w-full h-12 text-lg font-bold bg-black hover:bg-gray-800 text-white rounded-xl shadow-xl transition-all active:scale-95"
+                    >
+                        {loading ? (
+                            <>
+                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                Procesando con Brain AI...
+                            </>
+                        ) : (
+                            <>
+                                <Sparkles className="mr-2 h-5 w-5" />
+                                ¡Generar Video Maestro!
+                            </>
+                        )}
+                    </Button>
 
                     {error && (
                         <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md flex items-start gap-2">
@@ -163,6 +180,8 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
                         </div>
                     )}
                 </form>
+
+                {/* Progreso en tiempo real */}
 
                 {/* Progreso en tiempo real */}
                 {currentJob && (
@@ -238,6 +257,6 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
                     </div>
                 )}
             </CardContent>
-        </Card>
+        </Card >
     );
 }
