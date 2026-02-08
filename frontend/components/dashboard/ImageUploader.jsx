@@ -58,7 +58,7 @@ export default function ImageUploader({ onImagesSelected, selectedImages = [] })
                 <div
                     {...getRootProps()}
                     className={`
-                        border-2 border-dashed rounded-lg p-12 text-center cursor-pointer
+                        border-2 border-dashed rounded-none p-12 text-center cursor-pointer
                         transition-colors duration-200
                         ${isDragActive
                             ? 'border-blue-500 bg-blue-50'
@@ -86,7 +86,7 @@ export default function ImageUploader({ onImagesSelected, selectedImages = [] })
                             {uploadedImages.map((image) => (
                                 <div
                                     key={image.id}
-                                    className="relative group aspect-square rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
+                                    className="relative group aspect-square rounded-none overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
                                 >
                                     <img
                                         src={image.preview}
@@ -109,7 +109,7 @@ export default function ImageUploader({ onImagesSelected, selectedImages = [] })
 
                                     {/* Badge de selección */}
                                     {selectedImages.some(img => img.id === image.id) && (
-                                        <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
+                                        <div className="absolute top-2 right-2 bg-green-500 text-white rounded-none p-1">
                                             <CheckCircle2 className="h-4 w-4" />
                                         </div>
                                     )}

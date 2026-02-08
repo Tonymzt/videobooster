@@ -7,13 +7,13 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-[#070708] text-white font-sans selection:bg-pink-500/30 overflow-hidden">
 
       {/* 🌌 FONDO DE GRADIENTES DINÁMICOS */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-pink-600/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-rose-600/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-pink-600/10 rounded-none blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-rose-600/5 rounded-none blur-[100px] pointer-events-none" />
 
       {/* 🧭 NAVIGATION BAR */}
       <nav className="relative z-10 flex items-center justify-between px-10 py-8">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-gradient-to-tr from-pink-600 to-rose-600 rounded-xl flex items-center justify-center shadow-lg shadow-pink-600/20">
+          <div className="h-10 w-10 bg-gradient-to-tr from-pink-600 to-rose-600 rounded-none flex items-center justify-center shadow-lg shadow-pink-600/20">
             <Video className="h-5 w-5 text-white" />
           </div>
           <span className="font-black text-2xl tracking-tighter">VideoBooster</span>
@@ -25,7 +25,7 @@ export default function Home() {
             <Button variant="ghost" className="text-sm font-bold text-slate-300 hover:text-white hover:bg-white/5 px-6">Iniciar Sesión</Button>
           </Link>
           <Link href="/signup">
-            <Button className="bg-pink-600 hover:bg-pink-500 text-white rounded-xl font-bold px-8 shadow-lg shadow-pink-600/20 transition-all active:scale-95">Empieza Gratis</Button>
+            <Button className="bg-pink-600 hover:bg-pink-500 text-white rounded-none font-bold px-8 shadow-lg shadow-pink-600/20 transition-all active:scale-95">Empieza Gratis</Button>
           </Link>
         </div>
       </nav>
@@ -33,7 +33,7 @@ export default function Home() {
       {/* 🚀 HERO SECTION */}
       <main className="relative z-10 flex flex-col items-center text-center px-6 pt-20 pb-40 max-w-5xl mx-auto space-y-12">
         <div className="space-y-6">
-          <Badge className="bg-pink-600/10 text-pink-500 border-pink-500/20 py-1.5 px-4 rounded-full text-[10px] font-black uppercase tracking-[0.2em] animate-in slide-in-from-bottom-4 duration-500">
+          <Badge className="bg-pink-600/10 text-pink-500 border-pink-500/20 py-1.5 px-4 rounded-none text-[10px] font-black uppercase tracking-[0.2em] animate-in slide-in-from-bottom-4 duration-500">
             <Sparkles className="h-3 w-3 mr-2" /> VANGUARDIA IA 3.2
           </Badge>
           <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-[0.9] text-white animate-in slide-in-from-bottom-8 duration-700">
@@ -47,24 +47,24 @@ export default function Home() {
 
         <div className="flex flex-col sm:flex-row gap-6 pt-4 animate-in zoom-in-95 duration-1000">
           <Link href="/signup">
-            <Button className="bg-pink-600 hover:bg-pink-500 text-white h-16 px-10 rounded-2xl text-lg font-black shadow-[0_0_40px_rgba(236,72,153,0.3)] transition-all hover:scale-105 active:scale-95">
+            <Button className="bg-pink-600 hover:bg-pink-500 text-white h-16 px-10 rounded-none text-lg font-black shadow-[0_0_40px_rgba(236,72,153,0.3)] transition-all hover:scale-105 active:scale-95">
               Crear mi primer video
             </Button>
           </Link>
-          <Button variant="outline" className="h-16 px-10 rounded-2xl text-lg font-bold border-white/10 bg-white/5 hover:bg-white/10 text-white backdrop-blur-xl">
+          <Button variant="outline" className="h-16 px-10 rounded-none text-lg font-bold border-white/10 bg-white/5 hover:bg-white/10 text-white backdrop-blur-xl">
             <PlayCircle className="h-5 w-5 mr-3" /> Ver Demo
           </Button>
         </div>
 
         {/* MOCKUP PREVIEW */}
         <div className="pt-20 relative animate-in slide-in-from-bottom-20 duration-1000">
-          <div className="absolute inset-0 bg-pink-500/20 rounded-[40px] blur-[120px] -z-10" />
-          <div className="bg-[#0f0f12] border border-white/10 rounded-[40px] p-4 shadow-2xl relative">
-            <div className="aspect-video w-full max-w-4xl bg-black rounded-[32px] overflow-hidden flex items-center justify-center">
+          <div className="absolute inset-0 bg-pink-500/20 rounded-none blur-[120px] -z-10" />
+          <div className="bg-[#0f0f12] border border-white/10 rounded-none p-4 shadow-2xl relative">
+            <div className="aspect-video w-full max-w-4xl bg-black rounded-none overflow-hidden flex items-center justify-center">
               <PlayCircle className="h-16 w-16 text-pink-500/20" />
             </div>
             {/* Floating elements */}
-            <div className="absolute -top-10 -right-10 bg-[#1a1a1e] border border-pink-500/30 p-4 rounded-2xl shadow-2xl animate-bounce duration-[3000ms]">
+            <div className="absolute -top-10 -right-10 bg-[#1a1a1e] border border-pink-500/30 p-4 rounded-none shadow-2xl animate-bounce duration-[3000ms]">
               <TrendingUp className="h-6 w-6 text-pink-500" />
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function Home() {
 
 function Badge({ children, className }) {
   return (
-    <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
+    <div className={`inline-flex items-center rounded-none border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
       {children}
     </div>
   );

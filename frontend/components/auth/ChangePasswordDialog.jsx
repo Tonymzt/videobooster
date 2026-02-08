@@ -83,7 +83,7 @@ export default function ChangePasswordDialog({ trigger }) {
             {open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
                     {/* Modal Content */}
-                    <div className="w-full max-w-sm bg-[#0a0a0c] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 relative">
+                    <div className="w-full max-w-sm bg-[#0a0a0c] border border-white/10 rounded-none shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 relative">
 
                         {/* Close Button */}
                         <button
@@ -95,7 +95,7 @@ export default function ChangePasswordDialog({ trigger }) {
 
                         <div className="p-6">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="p-2 bg-pink-500/10 rounded-lg">
+                                <div className="p-2 bg-pink-500/10 rounded-none">
                                     <Lock className="h-5 w-5 text-pink-500" />
                                 </div>
                                 <h2 className="text-lg font-bold text-white">Cambiar Contraseña</h2>
@@ -106,7 +106,7 @@ export default function ChangePasswordDialog({ trigger }) {
 
                             <form onSubmit={handleUpdate} className="space-y-4">
                                 {message.text && (
-                                    <div className={`p-3 rounded-xl text-xs font-bold flex items-center gap-2 ${message.type === 'error' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-green-500/10 text-green-400 border border-green-500/20'
+                                    <div className={`p-3 rounded-none text-xs font-bold flex items-center gap-2 ${message.type === 'error' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-green-500/10 text-green-400 border border-green-500/20'
                                         }`}>
                                         {message.text}
                                     </div>
@@ -119,7 +119,7 @@ export default function ChangePasswordDialog({ trigger }) {
                                             placeholder="Nueva contraseña"
                                             value={newPassword}
                                             onChange={(e) => setNewPassword(e.target.value)}
-                                            className={`text-white h-12 px-4 rounded-xl transition-all border ${inputErrorClass}`}
+                                            className={`text-white h-12 px-4 rounded-none transition-all border ${inputErrorClass}`}
                                             required
                                         />
                                         <button
@@ -138,7 +138,7 @@ export default function ChangePasswordDialog({ trigger }) {
                                             placeholder="Confirmar contraseña"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
-                                            className={`text-white h-12 px-4 rounded-xl transition-all border ${inputErrorClass}`}
+                                            className={`text-white h-12 px-4 rounded-none transition-all border ${inputErrorClass}`}
                                             required
                                         />
                                         <button
@@ -153,7 +153,7 @@ export default function ChangePasswordDialog({ trigger }) {
                                 </div>
 
                                 <div className="pt-2">
-                                    <Button type="submit" disabled={loading} className="w-full h-12 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl shadow-lg shadow-pink-600/20 transition-all active:scale-95">
+                                    <Button type="submit" disabled={loading} className="w-full h-12 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-none shadow-lg shadow-pink-600/20 transition-all active:scale-95">
                                         {loading ? 'Actualizando...' : 'Guardar Cambios'}
                                     </Button>
                                 </div>

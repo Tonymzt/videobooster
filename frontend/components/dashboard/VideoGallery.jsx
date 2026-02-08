@@ -46,12 +46,12 @@ export default function VideoGallery({ videos = [] }) {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-pink-500 transition-colors" />
                         <Input
                             placeholder="Buscar video..."
-                            className="bg-white/5 border-white/10 rounded-xl pl-10 w-[200px] md:w-[300px] text-xs focus:ring-pink-500/50"
+                            className="bg-white/5 border-white/10 rounded-none pl-10 w-[200px] md:w-[300px] text-xs focus:ring-pink-500/50"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <Button variant="outline" className="border-white/10 bg-white/5 text-slate-300 rounded-xl h-10 px-4 hover:bg-white/10">
+                    <Button variant="outline" className="border-white/10 bg-white/5 text-slate-300 rounded-none h-10 px-4 hover:bg-white/10">
                         <Filter className="h-4 w-4 mr-2" />
                         Filtros
                     </Button>
@@ -63,7 +63,7 @@ export default function VideoGallery({ videos = [] }) {
                 {displayVideos.map((video) => (
                     <div
                         key={video.id}
-                        className="group relative flex flex-col bg-[#0f0f12] rounded-[32px] border border-white/5 overflow-hidden hover:border-pink-500/40 transition-all duration-500 shadow-xl hover:shadow-pink-600/5"
+                        className="group relative flex flex-col bg-[#0f0f12] rounded-none-[32px] border border-white/5 overflow-hidden hover:border-pink-500/40 transition-all duration-500 shadow-xl hover:shadow-pink-600/5"
                     >
                         {/* Multimedia Container */}
                         <div className="aspect-[9/16] relative bg-slate-900 overflow-hidden">
@@ -89,20 +89,20 @@ export default function VideoGallery({ videos = [] }) {
 
                             {/* Botón Play Central (Solo en Hover) */}
                             <div className="absolute inset-0 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                <div className="w-16 h-16 rounded-full bg-pink-600 flex items-center justify-center shadow-2xl scale-75 group-hover:scale-100 transition-transform shadow-pink-600/50 cursor-pointer">
+                                <div className="w-16 h-16 rounded-none bg-pink-600 flex items-center justify-center shadow-2xl scale-75 group-hover:scale-100 transition-transform shadow-pink-600/50 cursor-pointer">
                                     <Play className="h-6 w-6 text-white fill-white" />
                                 </div>
                             </div>
 
                             {/* Acciones Rápidas Inferiores */}
                             <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                <Button size="icon" className="h-10 w-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white hover:bg-pink-600">
+                                <Button size="icon" className="h-10 w-10 rounded-none bg-black/60 backdrop-blur-md border border-white/10 text-white hover:bg-pink-600">
                                     <Download className="h-4 w-4" />
                                 </Button>
-                                <Button size="icon" className="h-10 w-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white hover:bg-pink-600">
+                                <Button size="icon" className="h-10 w-10 rounded-none bg-black/60 backdrop-blur-md border border-white/10 text-white hover:bg-pink-600">
                                     <Share2 className="h-4 w-4" />
                                 </Button>
-                                <Button size="icon" className="h-10 w-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white hover:bg-red-600">
+                                <Button size="icon" className="h-10 w-10 rounded-none bg-black/60 backdrop-blur-md border border-white/10 text-white hover:bg-red-600">
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
                             </div>
@@ -126,8 +126,8 @@ export default function VideoGallery({ videos = [] }) {
                 ))}
 
                 {/* Tarjeta de "Crear Nuevo" fija */}
-                <div className="aspect-[9/16] rounded-[32px] border-2 border-dashed border-white/5 hover:border-pink-500/40 bg-white/[0.02] flex flex-col items-center justify-center gap-4 cursor-pointer group transition-all">
-                    <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
+                <div className="aspect-[9/16] rounded-none-[32px] border-2 border-dashed border-white/5 hover:border-pink-500/40 bg-white/[0.02] flex flex-col items-center justify-center gap-4 cursor-pointer group transition-all">
+                    <div className="w-16 h-16 rounded-none bg-white/5 flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
                         <Plus className="h-8 w-8 text-slate-600 group-hover:text-pink-500" />
                     </div>
                     <span className="text-xs font-black text-slate-600 group-hover:text-pink-400 uppercase tracking-widest">Nuevo Video</span>

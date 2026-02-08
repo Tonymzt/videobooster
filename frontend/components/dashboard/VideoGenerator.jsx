@@ -114,7 +114,7 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
             <CardContent className="space-y-6">
                 {/* Selección Actual del Dashboard */}
                 {(preselectedImages?.length > 0 || preselectedAvatar) && (
-                    <div className="flex flex-wrap gap-4 p-4 bg-blue-50/50 rounded-lg border border-blue-100/50">
+                    <div className="flex flex-wrap gap-4 p-4 bg-blue-50/50 rounded-none border border-blue-100/50">
                         {preselectedAvatar && (
                             <div className="flex items-center gap-2">
                                 <Badge variant="default" className="bg-blue-600">
@@ -158,7 +158,7 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
                     <Button
                         type="submit"
                         disabled={loading || currentJob || !prompt}
-                        className="w-full h-12 text-lg font-bold bg-black hover:bg-gray-800 text-white rounded-xl shadow-xl transition-all active:scale-95"
+                        className="w-full h-12 text-lg font-bold bg-black hover:bg-gray-800 text-white rounded-none shadow-xl transition-all active:scale-95"
                     >
                         {loading ? (
                             <>
@@ -174,7 +174,7 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
                     </Button>
 
                     {error && (
-                        <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md flex items-start gap-2">
+                        <div className="p-3 text-sm text-red-600 bg-red-50 rounded-none flex items-start gap-2">
                             <XCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                             <span>{error}</span>
                         </div>
@@ -185,7 +185,7 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
 
                 {/* Progreso en tiempo real */}
                 {currentJob && (
-                    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border">
+                    <div className="space-y-4 p-4 bg-gray-50 rounded-none border">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 {currentJob.status === 'completed' ? (
@@ -207,7 +207,7 @@ export default function VideoGenerator({ onVideoComplete, preselectedImages, pre
                         <Progress value={currentJob.progress} className="h-2" />
 
                         <p className="text-sm text-gray-600">
-                            Job ID: <code className="text-xs bg-white px-2 py-1 rounded">{currentJob.jobId}</code>
+                            Job ID: <code className="text-xs bg-white px-2 py-1 rounded-none">{currentJob.jobId}</code>
                         </p>
 
                         {/* Video completado */}

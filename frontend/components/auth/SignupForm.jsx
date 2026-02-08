@@ -77,8 +77,8 @@ export default function SignupForm() {
     if (success) {
         return (
             <div className="w-full max-w-md mx-auto relative z-10">
-                <div className="bg-[#1a1a1e] p-8 rounded-[32px] shadow-2xl border border-white/5 text-center">
-                    <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
+                <div className="bg-[#1a1a1e] p-8 rounded-none-[32px] shadow-2xl border border-white/5 text-center">
+                    <div className="w-12 h-12 bg-emerald-500/10 rounded-none flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
                         <Mail className="w-6 h-6 text-emerald-400" />
                     </div>
                     <h2 className="text-xl font-bold text-white mb-1">Correo Enviado</h2>
@@ -98,11 +98,11 @@ export default function SignupForm() {
     return (
         <div className="w-full max-w-md mx-auto relative z-10">
             {/* 4. 🎨 DISEÑO DARK ENTERPRISE (Fondo Sólido) */}
-            <div className="bg-[#1a1a1e] p-8 rounded-[32px] shadow-2xl border border-white/5">
+            <div className="bg-[#1a1a1e] p-8 rounded-none-[32px] shadow-2xl border border-white/5">
 
                 {/* Header */}
                 <div className="flex flex-col items-center mb-8">
-                    <div className="w-14 h-14 bg-gradient-to-tr from-pink-600 to-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20">
+                    <div className="w-14 h-14 bg-gradient-to-tr from-pink-600 to-rose-600 rounded-none flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20">
                         <Building2 className="w-7 h-7 text-white" />
                     </div>
                     <h1 className="text-3xl font-black text-white tracking-tight mb-2">
@@ -116,11 +116,11 @@ export default function SignupForm() {
                 <form onSubmit={handleSignup} className="space-y-6">
 
                     {/* 5. 🏗️ LAYOUT ESTABLE: Tabs + Espacio Reservado */}
-                    <div className="bg-black/20 p-1 rounded-xl flex gap-1 mb-3 relative z-10">
+                    <div className="bg-black/20 p-1 rounded-none flex gap-1 mb-3 relative z-10">
                         <button
                             type="button"
                             onClick={() => setAccountType('personal')}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer relative z-20 ${accountType === 'personal'
+                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-none text-xs font-bold transition-all cursor-pointer relative z-20 ${accountType === 'personal'
                                 ? 'bg-[#2a2a30] text-white shadow-md border border-white/5'
                                 : 'text-slate-500 hover:text-slate-300'
                                 }`}
@@ -131,7 +131,7 @@ export default function SignupForm() {
                         <button
                             type="button"
                             onClick={() => setAccountType('business')}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all relative overflow-hidden cursor-pointer z-20 ${accountType === 'business'
+                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-none text-xs font-bold transition-all relative overflow-hidden cursor-pointer z-20 ${accountType === 'business'
                                 ? 'bg-gradient-to-r from-purple-900/40 to-pink-900/40 text-purple-200 shadow-md border border-purple-500/30'
                                 : 'text-slate-500 hover:text-slate-300'
                                 }`}
@@ -145,7 +145,7 @@ export default function SignupForm() {
                     {/* Espacio reservado fijo (h-5) para evitar saltos. Opacity transition. */}
                     <div className="h-5 mb-5 flex items-center justify-center overflow-hidden">
                         <div className={`transition-all duration-300 transform ${accountType === 'business' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
-                            <span className="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20 font-medium tracking-wide">
+                            <span className="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-none border border-purple-500/20 font-medium tracking-wide">
                                 ✨ Habilita Facturación CFDI 4.0
                             </span>
                         </div>
@@ -165,7 +165,7 @@ export default function SignupForm() {
                                     onChange={(e) => setUsername(e.target.value)}
                                     placeholder="Ej. TonyStark"
                                     required
-                                    className="pl-11 h-12 bg-[#27272a] border-transparent focus:border-pink-500/50 text-white rounded-xl placeholder:text-slate-600 font-medium transition-all focus:bg-[#27272a] focus:ring-0"
+                                    className="pl-11 h-12 bg-[#27272a] border-transparent focus:border-pink-500/50 text-white rounded-none placeholder:text-slate-600 font-medium transition-all focus:bg-[#27272a] focus:ring-0"
                                 />
                             </div>
                         </div>
@@ -186,7 +186,7 @@ export default function SignupForm() {
                                     }}
                                     placeholder="nombre@empresa.com"
                                     required
-                                    className="pl-11 h-12 bg-[#27272a] border-transparent focus:border-pink-500/50 text-white rounded-xl placeholder:text-slate-600 font-medium transition-all focus:bg-[#27272a] focus:ring-0"
+                                    className="pl-11 h-12 bg-[#27272a] border-transparent focus:border-pink-500/50 text-white rounded-none placeholder:text-slate-600 font-medium transition-all focus:bg-[#27272a] focus:ring-0"
                                 />
                             </div>
                         </div>
@@ -205,7 +205,7 @@ export default function SignupForm() {
                                     placeholder="••••••••"
                                     required
                                     minLength={8}
-                                    className="pl-11 pr-10 h-12 bg-[#27272a] border-transparent focus:border-pink-500/50 text-white rounded-xl placeholder:text-slate-600 font-medium transition-all focus:bg-[#27272a] focus:ring-0"
+                                    className="pl-11 pr-10 h-12 bg-[#27272a] border-transparent focus:border-pink-500/50 text-white rounded-none placeholder:text-slate-600 font-medium transition-all focus:bg-[#27272a] focus:ring-0"
                                 />
                                 <button
                                     type="button"
@@ -226,7 +226,7 @@ export default function SignupForm() {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 animate-in shake">
+                        <div className="p-3 rounded-none bg-red-500/10 border border-red-500/20 animate-in shake">
                             <p className="text-xs font-bold text-red-400 text-center">
                                 {error}
                             </p>
@@ -237,7 +237,7 @@ export default function SignupForm() {
                     <Button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full h-12 bg-[#e11d48] hover:bg-[#be123c] text-white font-bold rounded-xl shadow-lg shadow-rose-900/20 transition-all active:scale-[0.98] uppercase tracking-wide text-xs"
+                        className="w-full h-12 bg-[#e11d48] hover:bg-[#be123c] text-white font-bold rounded-none shadow-lg shadow-rose-900/20 transition-all active:scale-[0.98] uppercase tracking-wide text-xs"
                     >
                         {isLoading ? (
                             'Procesando...'

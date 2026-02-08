@@ -266,7 +266,7 @@ export default function SettingsPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-[#07080c]">
-                <div className="animate-spin w-8 h-8 border-4 border-pink-500 border-t-transparent rounded-full" />
+                <div className="animate-spin w-8 h-8 border-4 border-pink-500 border-t-transparent rounded-none" />
             </div>
         );
     }
@@ -277,18 +277,18 @@ export default function SettingsPage() {
             {/* 🚨 MODAL ALERT (Central) */}
             {notification && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-[#1a1a1e] border border-white/10 rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-in zoom-in-95 duration-200 relative overflow-hidden">
+                    <div className="bg-[#1a1a1e] border border-white/10 rounded-none shadow-2xl max-w-sm w-full p-6 animate-in zoom-in-95 duration-200 relative overflow-hidden">
 
                         {/* Status Bar Superior */}
                         <div className={`absolute top-0 left-0 right-0 h-1.5 ${notification.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'
                             }`} />
 
                         <div className="flex flex-col items-center text-center">
-                            <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 ${notification.type === 'success' ? 'bg-emerald-500/10' : 'bg-red-500/10'
+                            <div className={`w-12 h-12 rounded-none flex items-center justify-center mb-4 ${notification.type === 'success' ? 'bg-emerald-500/10' : 'bg-red-500/10'
                                 }`}>
                                 {notification.type === 'success'
                                     ? <CheckCircle2 className="w-6 h-6 text-emerald-500" />
-                                    : <div className="w-6 h-6 rounded-full border-2 border-red-500 flex items-center justify-center"><span className="text-sm font-bold text-red-500">!</span></div>
+                                    : <div className="w-6 h-6 rounded-none border-2 border-red-500 flex items-center justify-center"><span className="text-sm font-bold text-red-500">!</span></div>
                                 }
                             </div>
 
@@ -324,7 +324,7 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Account Type Badge */}
-                <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20">
+                <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-none bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20">
                     {profile?.account_type === 'business' ? (
                         <>
                             <Building2 className="w-4 h-4 text-pink-500" />
@@ -340,9 +340,9 @@ export default function SettingsPage() {
 
                 {/* Upgrade Prompt (Solo para Personal) */}
                 {showUpgradePrompt && profile?.account_type === 'personal' && (
-                    <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-pink-500/5 to-purple-500/5 border border-pink-500/20 shadow-lg shadow-purple-900/10">
+                    <div className="mb-8 p-6 rounded-none bg-gradient-to-br from-pink-500/5 to-purple-500/5 border border-pink-500/20 shadow-lg shadow-purple-900/10">
                         <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-xl bg-pink-500/10">
+                            <div className="p-3 rounded-none bg-pink-500/10">
                                 <Building2 className="w-6 h-6 text-pink-500" />
                             </div>
                             <div className="flex-1">
@@ -368,7 +368,7 @@ export default function SettingsPage() {
 
                 <div className="space-y-8">
                     {/* Información General */}
-                    <section className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm">
+                    <section className="p-6 rounded-none bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm">
                         <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-white">
                             <User className="w-5 h-5 text-pink-500" />
                             Información General
@@ -405,7 +405,7 @@ export default function SettingsPage() {
 
                     {/* Datos Fiscales (Solo Business) */}
                     {profile?.account_type === 'business' && (
-                        <section className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm animate-in slide-in-from-bottom-4">
+                        <section className="p-6 rounded-none bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm animate-in slide-in-from-bottom-4">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-xl font-bold flex items-center gap-2 text-white">
                                     <FileText className="w-5 h-5 text-pink-500" />
@@ -413,7 +413,7 @@ export default function SettingsPage() {
                                 </h2>
                                 <div className="flex items-center gap-3">
                                     {profile?.fiscal_data_completed && (
-                                        <div className="flex items-center gap-1 text-emerald-400 text-sm font-medium bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                                        <div className="flex items-center gap-1 text-emerald-400 text-sm font-medium bg-emerald-500/10 px-3 py-1 rounded-none border border-emerald-500/20">
                                             <CheckCircle2 className="w-4 h-4" />
                                             Completo
                                         </div>
@@ -440,7 +440,7 @@ export default function SettingsPage() {
                                 </div>
                             </div>
 
-                            <p className="text-sm text-gray-400 mb-6 bg-blue-500/5 border border-blue-500/10 p-3 rounded-lg">
+                            <p className="text-sm text-gray-400 mb-6 bg-blue-500/5 border border-blue-500/10 p-3 rounded-none">
                                 ℹ️ Estos datos son necesarios para emitir tus facturas CFDI 4.0 según las normas del SAT.
                             </p>
 
@@ -479,7 +479,7 @@ export default function SettingsPage() {
                                             value={formData.regimen_fiscal}
                                             onChange={(e) => setFormData({ ...formData, regimen_fiscal: e.target.value })}
                                             disabled={!isEditingFiscal}
-                                            className={`w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500/50 appearance-none text-sm transition-all ${!isEditingFiscal ? 'bg-gray-900/50 border-gray-800 text-gray-500 cursor-not-allowed opacity-70' : ''}`}
+                                            className={`w-full px-4 py-3 rounded-none bg-gray-800/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500/50 appearance-none text-sm transition-all ${!isEditingFiscal ? 'bg-gray-900/50 border-gray-800 text-gray-500 cursor-not-allowed opacity-70' : ''}`}
                                         >
                                             <option value="" className="bg-gray-900 text-gray-500">Seleccionar...</option>
                                             {regimenesFiscales.map((reg) => (
@@ -496,7 +496,7 @@ export default function SettingsPage() {
                                                 value={formData.uso_cfdi || 'G03'}
                                                 onChange={(e) => setFormData({ ...formData, uso_cfdi: e.target.value })}
                                                 disabled={!isEditingFiscal}
-                                                className={`w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500/50 appearance-none text-sm transition-all ${!isEditingFiscal ? 'bg-gray-900/50 border-gray-800 text-gray-500 cursor-not-allowed opacity-70' : ''}`}
+                                                className={`w-full px-4 py-3 rounded-none bg-gray-800/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500/50 appearance-none text-sm transition-all ${!isEditingFiscal ? 'bg-gray-900/50 border-gray-800 text-gray-500 cursor-not-allowed opacity-70' : ''}`}
                                             >
                                                 {/* Fallback si está cargando */}
                                                 {!usosCfdi.length && <option value="G03">G03 - Gastos en general</option>}
@@ -507,7 +507,7 @@ export default function SettingsPage() {
                                                     </option>
                                                 ))}
                                             </select>
-                                            <p className="text-[11px] text-emerald-400/80 flex items-center gap-1.5 bg-emerald-500/5 p-2 rounded border border-emerald-500/10">
+                                            <p className="text-[11px] text-emerald-400/80 flex items-center gap-1.5 bg-emerald-500/5 p-2 rounded-none border border-emerald-500/10">
                                                 <span>💡</span>
                                                 <span>
                                                     Para servicios digitales (SaaS), el SAT recomienda: <strong>G03 - Gastos en general</strong>
@@ -602,7 +602,7 @@ export default function SettingsPage() {
                         <Button
                             onClick={handleSave}
                             disabled={isSaving || !hasChanges()}
-                            className={`font-bold h-12 px-8 rounded-xl shadow-lg transition-all ${!hasChanges()
+                            className={`font-bold h-12 px-8 rounded-none shadow-lg transition-all ${!hasChanges()
                                 ? 'bg-gray-800 text-gray-500 cursor-not-allowed shadow-none'
                                 : 'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white shadow-pink-600/20'
                                 }`}

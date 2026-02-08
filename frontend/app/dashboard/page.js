@@ -118,10 +118,10 @@ export default function DashboardPage() {
                     {/* 🧊 GRID DE TARJETAS DE CREACIÓN */}
                     <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
                         <Button
-                            className="h-auto bg-pink-600 hover:bg-pink-500 rounded-2xl flex flex-col items-center gap-3 p-8 min-w-[140px] shadow-2xl shadow-pink-500/20 border-0 transition-all active:scale-95"
+                            className="h-auto bg-pink-600 hover:bg-pink-500 rounded-none flex flex-col items-center gap-3 p-8 min-w-[140px] shadow-2xl shadow-pink-500/20 border-0 transition-all active:scale-95"
                             onClick={() => router.push('/dashboard/editor')}
                         >
-                            <div className="bg-white/20 p-3 rounded-xl backdrop-blur-md">
+                            <div className="bg-white/20 p-3 rounded-none backdrop-blur-md">
                                 <Plus className="h-6 w-6 text-white" />
                             </div>
                             <span className="font-bold text-white">Crear</span>
@@ -131,7 +131,7 @@ export default function DashboardPage() {
                             <div
                                 key={i}
                                 className={`
-                                    min-w-[240px] p-6 rounded-[28px] border border-white/5 
+                                    min-w-[240px] p-6 rounded-none-[28px] border border-white/5 
                                     bg-gradient-to-br ${mode.color} backdrop-blur-xl 
                                     hover:border-pink-500/30 transition-all cursor-pointer group
                                     flex flex-col justify-between h-[180px]
@@ -139,7 +139,7 @@ export default function DashboardPage() {
                                 onClick={() => router.push('/dashboard/editor')}
                             >
                                 <div className="flex justify-between items-start">
-                                    <div className="p-3 bg-black/30 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <div className="p-3 bg-black/30 rounded-none group-hover:scale-110 transition-transform">
                                         {mode.icon}
                                     </div>
                                     {mode.badge && (
@@ -170,7 +170,7 @@ export default function DashboardPage() {
                     {INSPIRATION_DATA.map((video) => (
                         <div
                             key={video.id}
-                            className="group relative aspect-[9/16] rounded-3xl overflow-hidden bg-[#121216] border border-white/5 hover:border-pink-500/50 transition-all cursor-pointer shadow-lg"
+                            className="group relative aspect-[9/16] rounded-none overflow-hidden bg-[#121216] border border-white/5 hover:border-pink-500/50 transition-all cursor-pointer shadow-lg"
                             onClick={() => setSelectedVideo(video)}
                         >
                             {/* Imagen Estática (Visible por defecto) */}
@@ -217,8 +217,8 @@ export default function DashboardPage() {
 
             {/* Float Bottom Notification (Magenta) */}
             <div className="fixed bottom-6 right-6 z-50 pointer-events-none">
-                <div className="bg-[#1a1a1e]/90 border border-white/10 p-4 rounded-2xl shadow-2xl backdrop-blur-xl flex items-center gap-4 animate-in slide-in-from-right-full duration-500 pointer-events-auto">
-                    <div className="h-10 w-10 bg-pink-500/20 rounded-xl flex items-center justify-center border border-pink-500/30">
+                <div className="bg-[#1a1a1e]/90 border border-white/10 p-4 rounded-none shadow-2xl backdrop-blur-xl flex items-center gap-4 animate-in slide-in-from-right-full duration-500 pointer-events-auto">
+                    <div className="h-10 w-10 bg-pink-500/20 rounded-none flex items-center justify-center border border-pink-500/30">
                         <TrendingUp className="h-5 w-5 text-pink-400" />
                     </div>
                     <div>

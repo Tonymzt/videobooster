@@ -36,10 +36,10 @@ export default function AvatarsPage() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-pink-500 transition-colors" />
                         <Input
                             placeholder="Buscar nombre o estilo..."
-                            className="bg-white/5 border-white/10 rounded-xl pl-10 w-[200px] md:w-[300px] text-xs focus:ring-pink-500/50"
+                            className="bg-white/5 border-white/10 rounded-none pl-10 w-[200px] md:w-[300px] text-xs focus:ring-pink-500/50"
                         />
                     </div>
-                    <Button variant="outline" className="border-white/10 bg-white/5 text-slate-300 rounded-xl">
+                    <Button variant="outline" className="border-white/10 bg-white/5 text-slate-300 rounded-none">
                         <Filter className="h-4 w-4 mr-2" />
                         Estilo
                     </Button>
@@ -48,7 +48,7 @@ export default function AvatarsPage() {
 
             {/* 🎭 SELECTOR DE AVATARES PREMIUM */}
             <div className="space-y-10">
-                <div className="bg-pink-600/5 border border-pink-500/20 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8">
+                <div className="bg-pink-600/5 border border-pink-500/20 rounded-none p-8 flex flex-col md:flex-row items-center gap-8">
                     <div className="flex-1 space-y-4 text-center md:text-left">
                         <Badge className="bg-pink-600 text-white border-0 font-bold uppercase tracking-wider text-[10px]">Recomendado</Badge>
                         <h3 className="text-2xl font-black text-white">Abigail 3.0 Expressive</h3>
@@ -61,7 +61,7 @@ export default function AvatarsPage() {
                             <Badge variant="secondary" className="bg-white/5 border-white/5 text-slate-400">Multi-Idioma</Badge>
                         </div>
                     </div>
-                    <div className="w-48 h-64 rounded-2xl overflow-hidden ring-4 ring-pink-500/30">
+                    <div className="w-48 h-64 rounded-none overflow-hidden ring-4 ring-pink-500/30">
                         <img src="https://files2.heygen.ai/avatar/v3/96da466668/full/2.2/preview.webp" className="w-full h-full object-cover" alt="Featured Avatar" />
                     </div>
                 </div>
@@ -75,15 +75,15 @@ export default function AvatarsPage() {
             </div>
 
             {/* 💡 FOOTER INFO */}
-            <div className="mt-16 p-6 bg-[#0f0f12] rounded-3xl border border-white/5 flex items-center gap-6">
-                <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 text-blue-400">
+            <div className="mt-16 p-6 bg-[#0f0f12] rounded-none border border-white/5 flex items-center gap-6">
+                <div className="h-12 w-12 rounded-none bg-blue-500/10 flex items-center justify-center border border-blue-500/20 text-blue-400">
                     <Info className="h-6 w-6" />
                 </div>
                 <div>
                     <h4 className="text-sm font-bold text-white uppercase tracking-tight">¿Necesitas un Avatar Personalizado?</h4>
                     <p className="text-xs text-slate-500 mt-1">Podemos clonar tu propia cara y voz para que seas tú quien presente tus productos. Contacta con soporte para el Plan Enterprise.</p>
                 </div>
-                <Button className="ml-auto bg-white/5 hover:bg-white/10 text-white border-white/10 rounded-xl">
+                <Button className="ml-auto bg-white/5 hover:bg-white/10 text-white border-white/10 rounded-none">
                     Más información
                 </Button>
             </div>

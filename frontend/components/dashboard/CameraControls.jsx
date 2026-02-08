@@ -23,7 +23,7 @@ export default function CameraControls({ onChange, useBrain, onBrainToggle }) {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-gray-900/50 rounded-2xl border border-gray-800">
+        <div className="space-y-6 p-6 bg-gray-900/50 rounded-none border border-gray-800">
             {/* Toggle IA Magic */}
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-white">Cámara Cinematográfica</h3>
@@ -31,7 +31,7 @@ export default function CameraControls({ onChange, useBrain, onBrainToggle }) {
                     type="button"
                     onClick={onBrainToggle}
                     className={`
-            flex items-center gap-2 px-4 py-2 rounded-lg transition-all
+            flex items-center gap-2 px-4 py-2 rounded-none transition-all
             ${useBrain
                             ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg'
                             : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
@@ -64,7 +64,7 @@ export default function CameraControls({ onChange, useBrain, onBrainToggle }) {
                             key={option.id}
                             onClick={() => handleChange('movement', option.id)}
                             className={`
-                p-4 rounded-xl border-2 transition-all text-sm
+                p-4 rounded-none border-2 transition-all text-sm
                 ${movement === option.id
                                     ? 'border-pink-500 bg-pink-500/10 text-white'
                                     : 'border-gray-700 bg-gray-800/50 text-gray-400 hover:border-gray-600'
@@ -95,7 +95,7 @@ export default function CameraControls({ onChange, useBrain, onBrainToggle }) {
                             key={option.id}
                             onClick={() => handleChange('shotType', option.id)}
                             className={`
-                p-3 rounded-xl border-2 transition-all text-sm
+                p-3 rounded-none border-2 transition-all text-sm
                 ${shotType === option.id
                                     ? 'border-pink-500 bg-pink-500/10 text-white'
                                     : 'border-gray-700 bg-gray-800/50 text-gray-400'
@@ -125,7 +125,7 @@ export default function CameraControls({ onChange, useBrain, onBrainToggle }) {
                             key={option.id}
                             onClick={() => handleChange('angle', option.id)}
                             className={`
-                p-3 rounded-xl border-2 transition-all text-sm
+                p-3 rounded-none border-2 transition-all text-sm
                 ${angle === option.id
                                     ? 'border-pink-500 bg-pink-500/10 text-white'
                                     : 'border-gray-700 bg-gray-800/50 text-gray-400'
@@ -139,7 +139,7 @@ export default function CameraControls({ onChange, useBrain, onBrainToggle }) {
             </div>
 
             {useBrain && (
-                <div className="mt-4 p-4 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-lg">
+                <div className="mt-4 p-4 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-none">
                     <p className="text-sm text-pink-400 flex items-center gap-2">
                         <Sparkles className="w-4 h-4" />
                         IA generará prompt cinematográfico optimizado automáticamente

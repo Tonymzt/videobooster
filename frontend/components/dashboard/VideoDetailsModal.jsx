@@ -85,7 +85,7 @@ export default function VideoDetailsModal({ video, isOpen, onClose, onRecreate }
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={onClose}>
             <div
-                className="bg-[#1a1c22] border border-white/5 w-full max-w-5xl rounded-[24px] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col h-auto max-h-[90vh]"
+                className="bg-[#1a1c22] border border-white/5 w-full max-w-5xl rounded-none-[24px] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col h-auto max-h-[90vh]"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* 🏷 HEADER SECCIÓN */}
@@ -94,7 +94,7 @@ export default function VideoDetailsModal({ video, isOpen, onClose, onRecreate }
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="text-slate-400 hover:text-white hover:bg-white/5 rounded-full h-8 w-8"
+                        className="text-slate-400 hover:text-white hover:bg-white/5 rounded-none h-8 w-8"
                         onClick={onClose}
                     >
                         <X className="h-5 w-5" />
@@ -120,7 +120,7 @@ export default function VideoDetailsModal({ video, isOpen, onClose, onRecreate }
                                 />
                                 {/* Custom Controls (Inspirado en la captura, ahora más pequeños) */}
                                 <div
-                                    className="absolute bottom-4 left-4 right-4 h-9 bg-black/60 backdrop-blur-xl rounded-lg border border-white/10 flex items-center px-3 gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                    className="absolute bottom-4 left-4 right-4 h-9 bg-black/60 backdrop-blur-xl rounded-none border border-white/10 flex items-center px-3 gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300"
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     <div onClick={togglePlay} className="cursor-pointer hover:scale-110 transition-transform">
@@ -132,15 +132,15 @@ export default function VideoDetailsModal({ video, isOpen, onClose, onRecreate }
                                     </div>
 
                                     <div
-                                        className="flex-1 h-1 bg-white/20 rounded-full relative cursor-pointer group/bar"
+                                        className="flex-1 h-1 bg-white/20 rounded-none relative cursor-pointer group/bar"
                                         onClick={handleSeek}
                                     >
                                         <div
-                                            className="absolute inset-y-0 left-0 bg-white rounded-full transition-all duration-100"
+                                            className="absolute inset-y-0 left-0 bg-white rounded-none transition-all duration-100"
                                             style={{ width: `${(currentTime / duration) * 100}%` }}
                                         />
                                         <div
-                                            className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-lg transition-all duration-100 opacity-0 group-hover/bar:opacity-100"
+                                            className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-none shadow-lg transition-all duration-100 opacity-0 group-hover/bar:opacity-100"
                                             style={{ left: `${(currentTime / duration) * 100}%` }}
                                         />
                                     </div>
@@ -163,7 +163,7 @@ export default function VideoDetailsModal({ video, isOpen, onClose, onRecreate }
                             </div>
                         ) : (
                             <div className="flex flex-col items-center gap-4 text-slate-600">
-                                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                                <div className="w-16 h-16 rounded-none bg-white/5 flex items-center justify-center border border-white/10">
                                     <Play className="h-6 w-6 text-slate-500 fill-slate-500" />
                                 </div>
                             </div>
@@ -180,20 +180,20 @@ export default function VideoDetailsModal({ video, isOpen, onClose, onRecreate }
                                     {video.references?.map((ref, idx) => (
                                         <div
                                             key={idx}
-                                            className="h-[80px] aspect-[3/4] rounded-lg bg-slate-800 border border-white/10 overflow-hidden shadow-lg cursor-pointer hover:border-pink-500/50 transition-all"
+                                            className="h-[80px] aspect-[3/4] rounded-none bg-slate-800 border border-white/10 overflow-hidden shadow-lg cursor-pointer hover:border-pink-500/50 transition-all"
                                             onMouseEnter={() => setHoveredImage(ref)}
                                             onMouseLeave={() => setHoveredImage(null)}
                                         >
                                             <img src={ref} alt={`Ref ${idx + 1}`} className="w-full h-full object-cover" />
                                         </div>
                                     )) || (
-                                            <div className="h-[80px] aspect-[3/4] rounded-lg bg-slate-800 border border-white/10" />
+                                            <div className="h-[80px] aspect-[3/4] rounded-none bg-slate-800 border border-white/10" />
                                         )}
                                 </div>
 
                                 {/* ZOOM FLOATING IMAGE (Keevx Style) */}
                                 {hoveredImage && (
-                                    <div className="absolute top-full left-0 mt-4 z-[110] w-[180px] aspect-[9/16] bg-[#1a1c22] border border-white/10 rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
+                                    <div className="absolute top-full left-0 mt-4 z-[110] w-[180px] aspect-[9/16] bg-[#1a1c22] border border-white/10 rounded-none overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
                                         <img src={hoveredImage} className="w-full h-full object-cover" alt="Zoom" />
                                     </div>
                                 )}
@@ -219,12 +219,12 @@ export default function VideoDetailsModal({ video, isOpen, onClose, onRecreate }
 
                         {/* Botones de Acción Inferiores */}
                         <div className="pt-8 flex gap-3 mt-auto">
-                            <Button variant="outline" className="flex-1 bg-white/5 border-white/10 text-white rounded-xl h-11 text-xs font-bold hover:bg-white/10 transition-all border-none shadow-inner">
+                            <Button variant="outline" className="flex-1 bg-white/5 border-white/10 text-white rounded-none h-11 text-xs font-bold hover:bg-white/10 transition-all border-none shadow-inner">
                                 <Share2 className="h-4 w-4 mr-2" />
                                 Compartir
                             </Button>
                             <Button
-                                className="flex-1 bg-[#4263eb] hover:bg-[#364fc7] text-white rounded-xl h-11 text-xs font-bold shadow-[0_0_20px_rgba(66,99,235,0.3)] transition-all active:scale-95"
+                                className="flex-1 bg-[#4263eb] hover:bg-[#364fc7] text-white rounded-none h-11 text-xs font-bold shadow-[0_0_20px_rgba(66,99,235,0.3)] transition-all active:scale-95"
                                 onClick={() => {
                                     onRecreate?.(video);
                                     onClose();

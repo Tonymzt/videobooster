@@ -25,7 +25,7 @@ export default function DashboardLayout({ children }) {
     if (loading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-[#070708]">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+                <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-pink-600"></div>
             </div>
         );
     }
@@ -46,7 +46,7 @@ export default function DashboardLayout({ children }) {
             {!isEditor && (
                 <header className="md:hidden flex items-center justify-between p-4 bg-[#0a0a0c] border-b border-white/5 z-30">
                     <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 bg-pink-600 rounded-lg flex items-center justify-center">
+                        <div className="h-8 w-8 bg-pink-600 rounded-none flex items-center justify-center">
                             <Video className="h-4 w-4 text-white" />
                         </div>
                         <span className="font-bold text-lg text-white">Booster</span>
@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }) {
 
                 {/* Logo Area (Desktop - Icon Only) */}
                 <div className="p-4 shrink-0 hidden md:flex md:justify-center">
-                    <div className="h-10 w-10 bg-gradient-to-tr from-pink-600 to-rose-600 rounded-xl flex items-center justify-center shadow-lg shadow-pink-500/20">
+                    <div className="h-10 w-10 bg-gradient-to-tr from-pink-600 to-rose-600 rounded-none flex items-center justify-center shadow-lg shadow-pink-500/20">
                         <Video className="h-5 w-5 text-white" />
                     </div>
                 </div>
@@ -97,7 +97,7 @@ export default function DashboardLayout({ children }) {
                             <Link key={item.href} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className="w-full md:w-auto flex justify-center">
                                 <div
                                     className={`
-                                        flex items-center gap-3 px-3 py-3 rounded-xl transition-all group mb-1 
+                                        flex items-center gap-3 px-3 py-3 rounded-none transition-all group mb-1 
                                         md:justify-center md:w-12 md:h-12 md:p-0
                                         ${isActive ? 'bg-pink-600 text-white shadow-lg shadow-pink-600/20' : 'hover:bg-white/5 text-slate-400 hover:text-white'}
                                     `}
@@ -115,7 +115,7 @@ export default function DashboardLayout({ children }) {
                 {/* User Area */}
                 <div className="p-4 border-t border-white/5 bg-[#0d0d0f]/50 shrink-0 space-y-3 flex flex-col items-center">
                     <div className="flex items-center gap-3 px-2 md:px-0 md:justify-center w-full">
-                        <div className="w-8 h-8 rounded-full bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 text-xs font-bold shrink-0">
+                        <div className="w-8 h-8 rounded-none bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 text-xs font-bold shrink-0">
                             {user.email[0].toUpperCase()}
                         </div>
 
@@ -127,7 +127,7 @@ export default function DashboardLayout({ children }) {
                             <p className="text-[10px] text-slate-500 truncate">Plan Pro ✨</p>
                         </div>
 
-                        <Link href="/dashboard/settings" className={`p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white ${isMobileMenuOpen ? 'block' : 'md:hidden'}`}>
+                        <Link href="/dashboard/settings" className={`p-2 hover:bg-white/10 rounded-none transition-colors text-slate-400 hover:text-white ${isMobileMenuOpen ? 'block' : 'md:hidden'}`}>
                             <Settings className="h-4 w-4" />
                         </Link>
                     </div>
@@ -135,7 +135,7 @@ export default function DashboardLayout({ children }) {
                     {/* Botón Logout Compacto */}
                     <button
                         onClick={() => signOut()}
-                        className={`flex items-center gap-2 w-full px-3 py-2 text-xs font-medium text-slate-500 hover:text-red-400 hover:bg-red-500/5 rounded-lg transition-all md:justify-center`}
+                        className={`flex items-center gap-2 w-full px-3 py-2 text-xs font-medium text-slate-500 hover:text-red-400 hover:bg-red-500/5 rounded-none transition-all md:justify-center`}
                         title="Cerrar Sesión"
                     >
                         <LogOut className="h-4 w-4" />

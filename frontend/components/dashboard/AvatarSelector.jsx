@@ -56,7 +56,7 @@ export default function AvatarSelector({ onAvatarSelected, selectedAvatar }) {
                     <div
                         key={avatar.id}
                         className={`
-                            relative rounded-2xl overflow-hidden cursor-pointer
+                            relative rounded-none overflow-hidden cursor-pointer
                             transition-all duration-300 bg-slate-900/50 group
                             ${isSelected
                                 ? 'ring-2 ring-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.3)] scale-105 z-10'
@@ -92,7 +92,7 @@ export default function AvatarSelector({ onAvatarSelected, selectedAvatar }) {
                             )}
 
                             {isSelected && (
-                                <div className="absolute top-3 right-3 bg-pink-500 text-white rounded-full p-1 shadow-lg z-20">
+                                <div className="absolute top-3 right-3 bg-pink-500 text-white rounded-none p-1 shadow-lg z-20">
                                     <CheckCircle2 className="h-4 w-4" />
                                 </div>
                             )}
