@@ -62,17 +62,17 @@ export default function DashboardLayout({ children }) {
                 </header>
             )}
 
-            {/* 🟦 MAIN CONTENT (Flex child 1) */}
-            <main className="flex-1 overflow-hidden relative flex flex-col h-full bg-[#070708] md:order-1">
+            {/* 🟦 MAIN CONTENT (Flex child 2) */}
+            <main className="flex-1 overflow-hidden relative flex flex-col h-full bg-[#070708] md:order-2">
                 {children}
             </main>
 
-            {/* ➡ SIDEBAR DERECHO (Flex child 2) */}
+            {/* ➡ SIDEBAR IZQUIERDO (Flex child 1) */}
             <aside className={`
-                fixed md:relative z-40 h-full bg-[#0a0a0c] border-l border-white/10 transition-all duration-300 ease-in-out flex flex-col md:order-2
+                fixed md:relative z-40 h-full bg-[#0a0a0c] border-r border-white/10 transition-all duration-300 ease-in-out flex flex-col md:order-1
                 ${isMobileMenuOpen
-                    ? 'w-64 translate-x-0 right-0'
-                    : 'w-0 md:w-20 -right-64 md:right-0 md:translate-x-0'
+                    ? 'w-64 translate-x-0 left-0'
+                    : 'w-0 md:w-20 -left-64 md:left-0 md:translate-x-0'
                 }
             `}>
 

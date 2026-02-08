@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import RunwayLayout from '@/components/editor/RunwayLayout';
+import StudioLayout from '@/components/editor/StudioLayout';
 
 export default function EditorPage() {
     const [generatedVideo, setGeneratedVideo] = useState(null);
@@ -36,7 +36,7 @@ export default function EditorPage() {
     };
 
     return (
-        <RunwayLayout
+        <StudioLayout
             generatedVideo={generatedVideo}
             onGenerate={handleGenerate}
             isGenerating={isGenerating}
